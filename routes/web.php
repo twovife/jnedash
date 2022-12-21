@@ -1,0 +1,83 @@
+<?php
+
+use App\Http\Controllers\ClaimController;
+use App\Http\Controllers\CustomerClaimController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmailController;
+use App\Http\Controllers\ProfileController;
+use App\Models\Claim;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
+
+Route::get('php', function () {
+    phpinfo();
+});
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::prefix('eclaim')->name('eclaim.')->group(function () {
+        Route::get('/', [ClaimController::class, 'index'])->name('index');
+        Route::get('/create', [ClaimController::class, 'create'])->name('create'); //done
+        Route::get('/open', [ClaimController::class, 'open'])->name('open'); //done
+        Route::get('/processed', [ClaimController::class, 'processed'])->name('processed');
+        Route::get('/closed', [ClaimController::class, 'closed'])->name('closed');
+        Route::put('/{claim}', [ClaimController::class, 'update'])->name('update');
+        Route::put('/{claim}/proccess', [ClaimController::class, 'proccessdata'])->name('processdata');
+        Route::post('/{claim}/approved', [ClaimController::class, 'approved'])->name('approved');
+        Route::put('/{claim}/rejected', [ClaimController::class, 'rejected'])->name('rejected');
+        Route::get('/{claim}', [ClaimController::class, 'edit'])->name('edit');
+    });
+
+
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+    });
+});
+
+Route::prefix('email')->name('email.')->group(function () {
+    Route::get('/createclaim/{ticket_id}', [EmailController::class, 'createclaim'])->name('createclaim');
+});
+
+Route::prefix('eclaim')->name('eclaim.')->group(function () { //done
+    Route::get('/{ticket_id}/signature', [ClaimController::class, 'signature'])->name('signature');
+    Route::get('/{ticket_id}/exportpdf', [ClaimController::class, 'exportpdf'])->name('exportpdf');
+    Route::get('/{ticket_id}/clientpdf', [ClaimController::class, 'clientpdf'])->name('clientpdf');
+    Route::post('/', [ClaimController::class, 'store'])->name('store');
+});
+
+Route::prefix('claim')->name('claim.')->group(function () { //done
+    Route::get('/', [ClaimController::class, 'customer'])->name('customer');
+    Route::get('/{ticket_id}/customerthanks', [ClaimController::class, 'customerthanks'])->name('customerthanks');
+});
+
+
+Route::get('/foto', function () {
+    return public_path('storage/app/public/client_upload/0owbwnO1671091645.jpg');
+});
+
+
+require __DIR__ . '/auth.php';
