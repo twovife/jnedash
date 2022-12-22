@@ -5,13 +5,14 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class ApprovedClaimMail extends Mailable
 {
-    public $claim
+    public $claim;
     use Queueable, SerializesModels;
 
     /**
@@ -19,7 +20,7 @@ class ApprovedClaimMail extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($claim)
     {
         $this->claim = $claim;
     }
@@ -32,7 +33,7 @@ class ApprovedClaimMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Approved Claim Mail',
+            subject: 'Claim Approved',
         );
     }
 
@@ -44,7 +45,7 @@ class ApprovedClaimMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'view.name',
+            view: 'email.approvedclaim',
         );
     }
 
@@ -55,6 +56,9 @@ class ApprovedClaimMail extends Mailable
      */
     public function attachments()
     {
-        return [];
+        return [
+            Attachment::fromStorage($this->claim->transfer_nota)
+                ->as('bukti-transfer.jpeg')
+        ];
     }
 }

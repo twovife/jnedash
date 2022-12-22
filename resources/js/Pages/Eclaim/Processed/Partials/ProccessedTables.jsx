@@ -1,4 +1,5 @@
 import ImageShow from "@/Components/ImageShow";
+import Paginate from "@/Components/Paginate";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import dayjs from "dayjs";
@@ -171,9 +172,7 @@ export default function ProccessedTables({
                                         {claim.cnote.receiver.destination}
                                     </td>
                                     <td className="whitespace-nowrap py-3 px-6">
-                                        {dayjs(claim.created_at)
-                                            .add(6, "day")
-                                            .format("DD-MM-YYYY")}
+                                        {dayjs(claim.sla).format("DD-MM-YYYY")}
                                     </td>
 
                                     <td className="py-3 px-6 text-right">
@@ -272,15 +271,20 @@ export default function ProccessedTables({
                                     className="py-3 px-6 text-center"
                                     colSpan={7}
                                 >
-                                    {loading
-                                        ? "Loading . . ."
-                                        : "Data Tidak Ditemukan"}
+                                    Data Tidak Ditemukan
                                 </td>
                             </tr>
                         </tbody>
                     )}
                 </table>
             </div>
+            <Paginate
+                dataFrom={from}
+                dataTo={to}
+                dataTotal={total}
+                linkPrev={prev_page_url}
+                linkNext={next_page_url}
+            />
             <ApproveModal
                 closeModal={onClosedModal}
                 showApprove={showApproveModal}

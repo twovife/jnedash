@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Claim;
 use App\Http\Requests\StoreClaimRequest;
 use App\Http\Requests\UpdateClaimRequest;
+use App\Mail\ApprovedClaimMail;
 use App\Mail\CreateClaimMail;
 use App\Models\Connote;
 use Carbon\Carbon;
@@ -87,6 +88,7 @@ class ClaimController extends Controller
         $request['penawaran_asuransi'] = $request->penawaran_asuransi ?? 'yes';
         $request['penawaran_packing'] = $request->packing == 'yes' ? 'yes' : $request->penawaran_packing ?? 'yes';
         $request['signature'] = time() . Str::random(7);
+        $request['sla'] = Carbon::now()->addDay(6);
 
         if (!$shipper || !str_contains($shipper['origin'], 'KDR')) {
             return redirect()->route('eclaim.create')->with('_error', 'Terjadi Kesalahan saat input data, mohon refresh browser anda terlebih dahulu 1');
@@ -185,7 +187,10 @@ class ClaimController extends Controller
                         });
                 })
                 ->where('status', 'open')
-                ->select('id', 'connote_id', 'ticket_id', 'complainant_idcard', 'complainant_bank', 'complainant_nota', 'transfer_nota', 'created_at')->paginate(5)->withQueryString(),
+                ->select('id', 'connote_id', 'ticket_id', 'complainant_idcard', 'complainant_bank', 'complainant_nota', 'transfer_nota', 'created_at', 'sla')
+                ->latest()
+                ->paginate(5)
+                ->withQueryString(),
             'filterval' => request('search') ?? null
         ]);
     }
@@ -220,21 +225,18 @@ class ClaimController extends Controller
                         });
                 })
                 ->where('status', 'processed')
-                ->select('id', 'connote_id', 'ticket_id', 'complainant_idcard', 'complainant_bank', 'complainant_nota', 'transfer_nota', 'created_at', 'processed_at', 'processed_by', 'claim_propose')->paginate(5)->withQueryString(),
+                ->select('id', 'connote_id', 'ticket_id', 'complainant_idcard', 'complainant_bank', 'complainant_nota', 'transfer_nota', 'created_at', 'processed_at', 'processed_by', 'claim_propose', 'sla')
+                ->latest()
+                ->paginate(5)
+                ->withQueryString(),
             'filterval' => request('search') ?? null
         ]);
     }
-    public function closed()
-    {
 
-        return Inertia::render(
-            'Eclaim/Closed/Index'
-        );
-    }
 
     public function approved(Request $request, Claim $claim)
     {
-        dd($claim->complainant_addr);
+        // dd($claim->complainant_addr);
         $request->validate([
             "claim_approved" => ['integer', 'required'],
             "reason" => ['required', 'string', 'max:225'],
@@ -256,6 +258,7 @@ class ClaimController extends Controller
         $request['closed_by'] = Auth::user()->id;
         $request['closed_at'] = date('Y-m-d');
         $request['transfer_nota'] = 'client_upload/' . $bukti_transfer;
+        $request['status_sla'] = date('Y-m-d') > $claim->sla ? 'over sla' : 'sla';
 
         try {
             $claim->update($request->all());
@@ -266,6 +269,8 @@ class ClaimController extends Controller
             ]);
         }
 
+        // dd($claim);
+        Mail::to($claim->complainant_email)->send(new ApprovedClaimMail($claim));
         return redirect()->route('eclaim.processed')->with('_success', 'Data Berhasil Diubah');
     }
 
@@ -292,6 +297,32 @@ class ClaimController extends Controller
                 'claim_approved' => 'update error, refresh browser anda terlebih dahulu',
             ]);
         }
+    }
+
+    public function closed()
+    {
+
+        return Inertia::render('Eclaim/Closed/Closed', [
+            'claim' =>  Claim::query()->with('cnote:id,connote', 'cnote.shipper:connote_id,origin', 'cnote.receiver:connote_id,destination', 'processedby:id,username')
+                ->when(request('search'), function ($query, $search) {
+                    $query->where(strtolower('ticket_id'), 'like', strtolower('%' . $search . '%'))
+                        ->orWhere(strtolower('status_sla'), strtolower($search))
+                        ->orWhere(strtolower('status'), 'like', strtolower('%' . $search . '%'))
+                        ->orWhereHas('cnote', function ($query) use ($search) {
+                            $query->where(strtolower('connote'), 'like', strtolower('%' . $search . '%'));
+                        })->orWhereHas('cnote.shipper', function ($query) use ($search) {
+                            $query->where(strtolower('origin'), 'like', strtolower('%' . $search . '%'));
+                        })->orWhereHas('cnote.receiver', function ($query) use ($search) {
+                            $query->where(strtolower('destination'), 'like', strtolower('%' . $search . '%'));
+                        })->orWhereHas('processedby', function ($query) use ($search) {
+                            $query->where(strtolower('username'), 'like', strtolower('%' . $search . '%'));
+                        });
+                })
+                ->whereNotNull('closed_at')
+                ->paginate(5)
+                ->withQueryString(),
+            'filterval' => request('search') ?? null
+        ]);
     }
 
     public function exportpdf($ticket_id)

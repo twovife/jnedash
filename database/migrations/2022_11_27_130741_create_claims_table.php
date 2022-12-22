@@ -45,6 +45,8 @@ return new class extends Migration
             $table->string('pembebanan', 255)->nullable();
             $table->integer('processed_by')->nullable();
             $table->integer('closed_by')->nullable();
+            $table->date('sla')->nullable();
+            $table->enum('status_sla', ['sla', 'over sla'])->nullable();
             $table->date('processed_at')->nullable();
             $table->date('closed_at')->nullable();
             $table->string('transfer_nota', 255)->nullable();

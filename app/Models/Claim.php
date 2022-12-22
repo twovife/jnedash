@@ -40,6 +40,8 @@ class Claim extends Model
         'pembebanan',
         'processed_by',
         'closed_by',
+        'sla',
+        'status_sla',
         'processed_at',
         'closed_at',
         'transfer_nota',
