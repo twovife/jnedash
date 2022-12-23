@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsFillCheckCircleFill, BsFillCloudDownloadFill } from "react-icons/bs";
 import { NumericFormat } from "react-number-format";
+import Detail from "../../Detail/Detail";
 import ApproveModal from "./ApproveModal";
 import RejectedModal from "./RejectedModal";
 
@@ -21,6 +22,7 @@ export default function ProccessedTables({
     const [showModalImg, setShowModalImg] = useState(false);
     const [showApproveModal, setShowApproveModal] = useState(false);
     const [showRejecteModal, setShowRejecteModal] = useState(false);
+    const [showDetail, setShowDetail] = useState({ id: "", show: false });
 
     const onShowApproveHandler = (e, id) => {
         setDataId(id);
@@ -45,7 +47,21 @@ export default function ProccessedTables({
         setImgs("");
         setShowModalImg(false);
     };
-    console.log(dataId);
+
+    const showDetailHandler = (id) => {
+        setShowDetail({
+            id: id,
+            show: true,
+        });
+    };
+
+    const closedDetailModal = () => {
+        setShowDetail({
+            id: "",
+            show: false,
+        });
+    };
+
     return (
         <div className="shadow-md sm:rounded-lg">
             <div className="pb-4 bg-white dark:bg-gray-900 p-3">
@@ -147,7 +163,14 @@ export default function ProccessedTables({
                             {datas.data.map((claim, key) => (
                                 <tr key={key}>
                                     <td className="py-3 px-6 text-center">
-                                        {claim.ticket_id}
+                                        <button
+                                            className="text-brand-500 hover:text-brand-700 focus:text-brand-700"
+                                            onClick={() =>
+                                                showDetailHandler(claim.id)
+                                            }
+                                        >
+                                            {claim.ticket_id}
+                                        </button>
                                     </td>
                                     <td className="py-3 px-6 whitespace-nowrap text-center">
                                         {dayjs(claim.created_at).format(
@@ -298,6 +321,7 @@ export default function ProccessedTables({
             />
 
             <ImageShow imgs={imgs} show={showModalImg} onClosed={onClosedImg} />
+            <Detail modalShow={showDetail} closedModal={closedDetailModal} />
         </div>
     );
 }

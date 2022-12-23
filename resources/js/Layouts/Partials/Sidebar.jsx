@@ -15,9 +15,6 @@ export default function Sidebar() {
                 />
             </li>
             <li>
-                <SidebarButton title={"Main Page"} />
-            </li>
-            <li>
                 <SideBarDropDown
                     title={"Claims"}
                     active={route().current("eclaim.*")}
@@ -39,6 +36,12 @@ export default function Sidebar() {
                             href: route("eclaim.closed"),
                             name: "Closed Claim",
                             active: route().current("eclaim.closed"),
+                        },
+                        {
+                            id: 4,
+                            href: route("eclaim.monitoring"),
+                            name: "Monitoring Claim",
+                            active: route().current("eclaim.monitoring"),
                         },
                     ]}
                 />

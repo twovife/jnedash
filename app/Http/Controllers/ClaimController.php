@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MonitoringExport;
 use App\Models\Claim;
 use App\Http\Requests\StoreClaimRequest;
 use App\Http\Requests\UpdateClaimRequest;
 use App\Mail\ApprovedClaimMail;
 use App\Mail\CreateClaimMail;
+use App\Mail\RejectedClaimMail;
 use App\Models\Connote;
 use Carbon\Carbon;
 use Exception;
@@ -129,7 +131,7 @@ class ClaimController extends Controller
      */
     public function show(Claim $claim)
     {
-        //
+        return $claim->load('cnote', 'cnote.shipper', 'cnote.receiver', 'processedby', 'closedby');
     }
 
     /**
@@ -287,16 +289,19 @@ class ClaimController extends Controller
         $request['status'] = 'rejected';
         $request['closed_by'] = Auth::user()->id;
         $request['closed_at'] = date('Y-m-d');
+        $request['status_sla'] = date('Y-m-d') > $claim->sla ? 'over sla' : 'sla';
 
         try {
             $claim->update($request->all());
             $claim->save();
-            return redirect()->route('eclaim.processed')->with('_success', 'Data Berhasil Diubah');
         } catch (\Throwable $th) {
             throw ValidationException::withMessages([
                 'claim_approved' => 'update error, refresh browser anda terlebih dahulu',
             ]);
         }
+
+        Mail::to($claim->complainant_email)->send(new RejectedClaimMail($claim));
+        return redirect()->route('eclaim.processed')->with('_success', 'Data Berhasil Diubah');
     }
 
     public function closed()
@@ -322,6 +327,43 @@ class ClaimController extends Controller
                 ->paginate(5)
                 ->withQueryString(),
             'filterval' => request('search') ?? null
+        ]);
+    }
+
+    public function monitoring()
+    {
+        return Inertia::render('Eclaim/Monitoring/Monitoring', [
+            'claim' =>  Claim::query()->with('cnote', 'cnote.shipper', 'cnote.receiver', 'processedby', 'closedby')
+                ->when(request('search'), function ($query, $search) {
+                    $query->where(strtolower('ticket_id'), 'like', strtolower('%' . $search . '%'))
+                        ->orWhere(strtolower('status_sla'), strtolower($search))
+                        ->orWhere(strtolower('status'), 'like', strtolower('%' . $search . '%'))
+                        ->orWhereHas('cnote', function ($query) use ($search) {
+                            $query->where(strtolower('connote'), 'like', strtolower('%' . $search . '%'));
+                        })->orWhereHas('cnote.shipper', function ($query) use ($search) {
+                            $query->where(strtolower('origin'), 'like', strtolower('%' . $search . '%'));
+                        })->orWhereHas('cnote.receiver', function ($query) use ($search) {
+                            $query->where(strtolower('destination'), 'like', strtolower('%' . $search . '%'));
+                        })->orWhereHas('processedby', function ($query) use ($search) {
+                            $query->where(strtolower('username'), 'like', strtolower('%' . $search . '%'));
+                        });
+                })
+                ->when(request('datefrom'), function ($query, $search) {
+                    $query->whereDate('created_at', '>=', $search);
+                }, function ($query) {
+                    $query->whereDate('created_at', '>=', Carbon::today()->subDays(30)->format('Y-m-d'));
+                })
+                ->when(request('datethru'), function ($query, $search) {
+                    $query->whereDate('created_at', '<=', $search);
+                }, function ($query) {
+                    $query->whereDate('created_at', '<=', Carbon::today()->format('Y-m-d'));
+                })
+                ->whereNotNull('id')
+                ->paginate(5)
+                ->withQueryString(),
+            'filterval' => request('search') ?? null,
+            'filterfrom' => request('datefrom') ?? Carbon::today()->subDays(30)->format('Y-m-d'),
+            'filterthru' => request('datethru') ?? Carbon::today()->format('Y-m-d')
         ]);
     }
 
@@ -362,5 +404,73 @@ class ClaimController extends Controller
         return Inertia::render('Eclaim/Customer/Thanks', [
             'awb' => $claim
         ]);
+    }
+
+    public function exportExcell()
+    {
+        $claim =   Claim::query()->with('cnote', 'cnote.shipper', 'cnote.receiver', 'processedby', 'closedby')
+            ->when(request('search'), function ($query, $search) {
+                $query->where(strtolower('ticket_id'), 'like', strtolower('%' . $search . '%'))
+                    ->orWhere(strtolower('status_sla'), strtolower($search))
+                    ->orWhere(strtolower('status'), 'like', strtolower('%' . $search . '%'))
+                    ->orWhereHas('cnote', function ($query) use ($search) {
+                        $query->where(strtolower('connote'), 'like', strtolower('%' . $search . '%'));
+                    })->orWhereHas('cnote.shipper', function ($query) use ($search) {
+                        $query->where(strtolower('origin'), 'like', strtolower('%' . $search . '%'));
+                    })->orWhereHas('cnote.receiver', function ($query) use ($search) {
+                        $query->where(strtolower('destination'), 'like', strtolower('%' . $search . '%'));
+                    })->orWhereHas('processedby', function ($query) use ($search) {
+                        $query->where(strtolower('username'), 'like', strtolower('%' . $search . '%'));
+                    });
+            })
+            ->when(request('datefrom'), function ($query, $search) {
+                $query->whereDate('created_at', '>=', $search);
+            }, function ($query) {
+                $query->whereDate('created_at', '>=', Carbon::today()->subDays(2)->format('Y-m-d'));
+            })
+            ->when(request('datethru'), function ($query, $search) {
+                $query->whereDate('created_at', '<=', $search);
+            }, function ($query) {
+                $query->whereDate('created_at', '<=', Carbon::today()->format('Y-m-d'));
+            })
+            ->get()->map(fn ($query) => [
+                "Tanggal Ticketing" => $query->created_at,
+                "Nomor Ticket" => $query->ticket_id,
+                "Nomor Resi" => $query->cnote->connote,
+                "Origin" => $query->cnote->shipper->origin,
+                "Destination" => $query->cnote->receiver->destination,
+                "Service" => $query->cnote->services_code,
+                "Shipper" => $query->cnote->shipper->shipper_name,
+                "Shipper Telp" => $query->cnote->shipper->phone,
+                "Cnee" => $query->cnote->receiver->receiver_name,
+                "Cnee Telp" => $query->cnote->receiver->phone,
+                "Pelapor" => $query->complainant,
+                "Pelapor Telp" => $query->complainant_number,
+                "Pelapor Email" => $query->complainant_email,
+                "Case" => $query->case,
+                "Good Description" => $query->cnote->goods_description,
+                "Nilai Barang" => $query->cnote->amount,
+                "Packing Kayu" => $query->packing,
+                "PIC Packing" => $query->packer,
+                "Penawaran Packing" => $query->penawaran_packing,
+                "Asuransi" => $query->asuransi,
+                "Penawaran Asuransi" => $query->penawaran_asuransi,
+                "Claim Propose" => $query->claim_propose,
+                "Claim Approve" => $query->claim_approved,
+                "Penyelesaian" => $query->penyelesaian,
+                "Pembebanan" => $query->pembebanan,
+                "SLA" => $query->sla,
+                "Status SLA" => $query->status_sla ?? "sla",
+                "Status Claim" => $query->status,
+                "Tanggal Processed" => $query->processed_at,
+                "PIC Processed" => $query->processedby ? $query->processedby->username : "",
+                "Tanggal Closed" => $query->closed_at,
+                "PIC Closed" =>  $query->closedby ? $query->closedby->username : "",
+                'KTP' => asset('storage/' . $query->complainant_idcard),
+                'Buku Tabungan' => asset('storage/' . $query->complainant_bank),
+                'Nota Pembelian' => asset('storage/' . $query->complainant_nota),
+                'Bukti Transfer' => asset('storage/' . $query->transfer_nota),
+            ]);
+        return (new MonitoringExport($claim))->download('Claim.xlsx');
     }
 }

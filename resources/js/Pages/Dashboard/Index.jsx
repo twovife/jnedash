@@ -16,7 +16,7 @@ export default function Dashboard(props) {
             <Head title="Dashboard" />
 
             {/* <div className="bg-white p-4 rounded">a</div> */}
-            <ContentWrap>asd</ContentWrap>
+            <ContentWrap>Selamat Datang di E-care Jne Kediri</ContentWrap>
         </Authenticated>
     );
 }

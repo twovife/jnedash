@@ -15,7 +15,6 @@ export default function Closed({
     filterval,
     ...props
 }) {
-    console.log(claim);
     const [filter, setFilter] = useState(null);
     const [searchFilter, setSearchFilter] = useState(filterval || undefined);
     const [loading, setLoading] = useState(false);

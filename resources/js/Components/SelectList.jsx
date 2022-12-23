@@ -23,7 +23,11 @@ export default function SelectList({
             >
                 {options ? (
                     options.map((opt) => (
-                        <option key={opt.id} value={opt.value}>
+                        <option
+                            key={opt.id}
+                            value={opt.value}
+                            selected={opt.selected}
+                        >
                             {opt.display}
                         </option>
                     ))

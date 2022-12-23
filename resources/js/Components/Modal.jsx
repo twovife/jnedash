@@ -8,6 +8,7 @@ export default function Modal({
     maxWidth = "2xl",
     closeable = true,
     onClose = () => {},
+    className = `bg-white dark:bg-gray-800`,
 }) {
     useEffect(() => {
         document.body.style.overflow = show ? "hidden" : null;
@@ -75,7 +76,7 @@ export default function Modal({
                     leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 >
                     <div
-                        className={`mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl transform transition-all w-full ${maxWidthClass}`}
+                        className={`mb-6 rounded-lg shadow-xl transform transition-all w-full ${className} ${maxWidthClass}`}
                     >
                         {children}
                     </div>

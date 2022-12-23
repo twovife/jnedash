@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 
 class RejectedClaimMail extends Mailable
 {
+    public $claim;
     use Queueable, SerializesModels;
 
     /**
@@ -18,9 +19,9 @@ class RejectedClaimMail extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($claim)
     {
-        //
+        $this->claim = $claim;
     }
 
     /**
@@ -31,7 +32,7 @@ class RejectedClaimMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Rejected Claim Mail',
+            subject: 'Claim Rejected',
         );
     }
 
@@ -43,7 +44,7 @@ class RejectedClaimMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'view.rejectedclaim',
+            view: 'email.rejectedclaim',
         );
     }
 

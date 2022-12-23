@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Claim;
+use Carbon\Carbon;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,32 +23,26 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect()->to('https://www.jne.co.id/id/beranda');
 });
 
-Route::get('php', function () {
-    phpinfo();
-});
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::prefix('eclaim')->name('eclaim.')->group(function () {
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('eclaim')->name('eclaim.')->middleware('permission:cs')->group(function () {
         Route::get('/', [ClaimController::class, 'index'])->name('index');
         Route::get('/create', [ClaimController::class, 'create'])->name('create'); //done
         Route::get('/open', [ClaimController::class, 'open'])->name('open'); //done
         Route::get('/processed', [ClaimController::class, 'processed'])->name('processed');
+        Route::get('/monitoring', [ClaimController::class, 'monitoring'])->name('monitoring');
+        Route::get('/exportExcell', [ClaimController::class, 'exportExcell'])->name('exportExcell');
         Route::get('/closed', [ClaimController::class, 'closed'])->name('closed');
         Route::put('/{claim}', [ClaimController::class, 'update'])->name('update');
         Route::put('/{claim}/proccess', [ClaimController::class, 'proccessdata'])->name('processdata');
         Route::post('/{claim}/approved', [ClaimController::class, 'approved'])->name('approved');
         Route::put('/{claim}/rejected', [ClaimController::class, 'rejected'])->name('rejected');
-        Route::get('/{claim}', [ClaimController::class, 'edit'])->name('edit');
+        Route::get('/{claim}', [ClaimController::class, 'show'])->name('show');
     });
 
 
@@ -75,9 +70,7 @@ Route::prefix('claim')->name('claim.')->group(function () { //done
 });
 
 
-Route::get('/foto', function () {
-    return public_path('storage/app/public/client_upload/0owbwnO1671091645.jpg');
-});
+
 
 
 require __DIR__ . '/auth.php';

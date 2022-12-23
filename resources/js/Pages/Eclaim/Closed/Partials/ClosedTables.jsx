@@ -6,11 +6,13 @@ import React, { useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsFillCloudDownloadFill } from "react-icons/bs";
 import { NumericFormat } from "react-number-format";
+import Detail from "../../Detail/Detail";
 
 export default function ClosedTables({ datas, onFilterChange, filterValue }) {
     const { total, from, to, next_page_url, prev_page_url } = datas;
     const [imgs, setImgs] = useState();
     const [showModalImg, setShowModalImg] = useState(false);
+    const [showDetail, setShowDetail] = useState({ id: "", show: false });
 
     const onHandleImageClick = (e) => {
         setImgs(e.target.getAttribute("data-url"));
@@ -22,15 +24,20 @@ export default function ClosedTables({ datas, onFilterChange, filterValue }) {
         setShowModalImg(false);
     };
 
-    const statusSla = (date1, date2) => {
-        let sla = new Date(date1);
-        let closedat = new Date(date2);
-        if (sla >= closedat) {
-            return "SLA";
-        } else {
-            return "Over SLA";
-        }
+    const showDetailHandler = (id) => {
+        setShowDetail({
+            id: id,
+            show: true,
+        });
     };
+
+    const closedDetailModal = () => {
+        setShowDetail({
+            id: "",
+            show: false,
+        });
+    };
+
     return (
         <>
             <div className="relative shadow-md sm:rounded-lg">
@@ -148,7 +155,14 @@ export default function ClosedTables({ datas, onFilterChange, filterValue }) {
                                 {datas.data.map((claim) => (
                                     <tr key={claim.id}>
                                         <td className="py-3 px-6">
-                                            {claim.ticket_id}
+                                            <button
+                                                className="text-brand-500 hover:text-brand-700 focus:text-brand-700"
+                                                onClick={() =>
+                                                    showDetailHandler(claim.id)
+                                                }
+                                            >
+                                                {claim.ticket_id}
+                                            </button>
                                         </td>
                                         <td className="text-center py-3 px-6">
                                             {dayjs(claim.created_at).format(
@@ -273,6 +287,7 @@ export default function ClosedTables({ datas, onFilterChange, filterValue }) {
                 />
             </div>
             <ImageShow imgs={imgs} show={showModalImg} onClosed={onClosed} />
+            <Detail modalShow={showDetail} closedModal={closedDetailModal} />
         </>
     );
 }

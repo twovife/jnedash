@@ -5,10 +5,9 @@ import Toasts from "@/Components/Toasts";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Inertia } from "@inertiajs/inertia";
 import { Head } from "@inertiajs/inertia-react";
-import { get } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BiPlus } from "react-icons/bi";
-import OpenTables from "./Partials/OpenTables";
+import MonitoringTables from "./Partials/MonitoringTables";
 
 export default function Open({
     auth,
@@ -16,32 +15,48 @@ export default function Open({
     flash,
     claim,
     filterval,
+    filterfrom,
+    filterthru,
     ...props
 }) {
     const [filter, setFilter] = useState(null);
     const [searchFilter, setSearchFilter] = useState(filterval || undefined);
+    const [fromFilter, setFromFilter] = useState(filterfrom || undefined);
+    const [thruFilter, setThruFilter] = useState(filterthru || undefined);
     const [loading, setLoading] = useState(false);
+    const [searchParams, setSearchParams] = useState({
+        search: filterval || "",
+        datefrom: filterfrom || "",
+        datethru: filterthru || "",
+    });
 
     const onFilterChange = (e) => {
-        setSearchFilter(e.target.value);
-        clearTimeout(filter);
-        const newFilter = setTimeout(() => {
-            Inertia.get(
-                route("eclaim.open"),
-                { search: e.target.value },
-                {
-                    preserveState: true,
-                    onStart: (visit) => {
-                        setLoading(true);
-                    },
-                    onFinish: (visit) => {
-                        setLoading(false);
-                    },
-                }
-            );
-        }, 500);
+        Inertia.get(route("eclaim.monitoring"), searchParams, {
+            preserveState: true,
+            onStart: (visit) => {
+                setLoading(true);
+            },
+            onFinish: (visit) => {
+                setLoading(false);
+            },
+        });
+    };
 
-        setFilter(newFilter);
+    const onDownloadFile = (e) => {
+        window.open(
+            route("eclaim.exportExcell", searchParams),
+            "_blank",
+            "noopener,noreferrer"
+        );
+    };
+
+    const onFilterInputChange = (e) => {
+        const key = e.target.name;
+        const value = e.target.value;
+        setSearchParams((values) => ({
+            ...values,
+            [key]: value,
+        }));
     };
 
     return (
@@ -67,10 +82,12 @@ export default function Open({
         >
             <Head title="Claim" />
             <ContentWrap>
-                <OpenTables
+                <MonitoringTables
                     datas={claim}
                     onFilterChange={onFilterChange}
-                    filterValue={searchFilter}
+                    onFilterInputChange={onFilterInputChange}
+                    onDownloadFile={onDownloadFile}
+                    searchParams={searchParams}
                 />
             </ContentWrap>
             <Loading show={loading} />

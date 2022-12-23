@@ -3,10 +3,16 @@
         <div style="padding-top: 5px;padding-bottom: 5px;width: 100%;text-align: center;">
             <img src="https://www.jne.co.id/frontend/images/material/logo.jpg" alt="jne" srcset="jne" width="100px">
         </div>
-        <h2 style="color: black">Claim Sudah Ter Approve</h2>
-        <p style="color: black">Anda telah melakukan claim dengan nomor ticketing : <b>{{ $claim['ticket_id'] }}</b>.</p>
-        <p style="margin-bottom: 30px;">Kami telah melakukan transfer / pembayaran claim kepada anda hari ini, terimakaih
-            telah sabar menunggu proses claim yang kita jalankan, semoga anda puas dengan pelayanan kami</p>
+        <h2 style="color: black">Claim Rejected</h2>
+        <p style="color: black">Maaf Claim dengan :<br>
+            Nomor Ticketing : {{ $claim->ticket_id }}<br>
+            Ticketing Date : {{ $claim->created_at->format('d-m-Y') }}
+        </p>
+        <p>Tidak Disetujui Oleh Pihak JNE Kediri dengan alasan {{ $claim->reason }}</p>
+        <p style="margin-bottom: 30px;">Terimakasih atas masukan dan kerjasama anda selama proses claim berjalan, kami
+            akan selalu memperbaiki kinerja kami dari masukan yang telah anda berikan.
+        </p>
+
 
         <div style="color: gray;background: whitesmoke;font-size: 0.5rem">
             <div>CS Kediri Call Center : (0354) 695167.</div>
