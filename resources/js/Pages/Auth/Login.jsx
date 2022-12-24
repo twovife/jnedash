@@ -50,7 +50,7 @@ export default function Login({ status, canResetPassword }) {
                     <InputLabel forInput="username" value="username" />
 
                     <TextInput
-                        id="MASOOK"
+                        id="username"
                         type="text"
                         name="username"
                         value={data.username}
