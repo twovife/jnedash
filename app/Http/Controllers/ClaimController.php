@@ -90,7 +90,7 @@ class ClaimController extends Controller
         $request['penawaran_asuransi'] = $request->penawaran_asuransi ?? 'yes';
         $request['penawaran_packing'] = $request->packing == 'yes' ? 'yes' : $request->penawaran_packing ?? 'yes';
         $request['signature'] = time() . Str::random(7);
-        $request['sla'] = Carbon::now()->addDay(6);
+        $request['sla'] = Carbon::now()->addDay(7);
 
         if (!$shipper || !str_contains($shipper['origin'], 'KDR')) {
             return redirect()->route('eclaim.create')->with('_error', 'Terjadi Kesalahan saat input data, mohon refresh browser anda terlebih dahulu 1');

@@ -131,8 +131,8 @@ export default function FormInput({
                                 },
                                 {
                                     id: 3,
-                                    value: "DESTROY",
-                                    display: "DESTROY",
+                                    value: "DAMAGE",
+                                    display: "DAMAGE",
                                 },
                                 {
                                     id: 4,
