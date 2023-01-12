@@ -7,7 +7,6 @@ import { BiArrowBack } from "react-icons/bi";
 import CheckAwb from "./Partials/CheckAwb";
 
 export default function Create({ auth, errors, ...props }) {
-    console.log(errors);
     return (
         <Authenticated
             auth={auth}

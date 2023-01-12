@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClaimController;
+use App\Http\Controllers\ComplainController;
 use App\Http\Controllers\CustomerClaimController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
@@ -22,9 +23,11 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return redirect()->to('https://www.jne.co.id/id/beranda');
-});
+// Route::get('/', function () {
+//     return redirect()->to('https://www.jne.co.id/id/beranda');
+// });
+
+Route::get('/', [DashboardController::class, 'index']);
 
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
@@ -70,7 +73,17 @@ Route::prefix('claim')->name('claim.')->group(function () { //done
 });
 
 
+Route::prefix('ecare')->name('ecare.')->group(function () {
+    Route::get('/', [ComplainController::class, 'index'])->name('index');
+    Route::get('/create', [ComplainController::class, 'create'])->name('create');
+});
 
-
+Route::get('/jsons', function () {
+    $content = json_decode(file_get_contents(storage_path('app\public\zoning.json')), true);
+    collect($content)->each(function ($contentt) {
+        dd($contentt);
+    });
+    dd($content);
+});
 
 require __DIR__ . '/auth.php';
