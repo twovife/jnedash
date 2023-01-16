@@ -8,10 +8,10 @@ export default function SideBarDropDown({
     active = false,
     lists,
     icon,
+    colapse,
+    dropdownId = 0,
     ...props
 }) {
-    const [colapse, setColapse] = useState(active ? true : false);
-
     return (
         <div className="relative">
             <div
@@ -23,21 +23,24 @@ export default function SideBarDropDown({
             >
                 <button
                     type="button"
-                    onClick={() => setColapse(!colapse)}
                     className={`w-full flex justify-start items-center px-6 py-2 hover:bg-blue-50 dark:hover:bg-gray-700 relative`}
                 >
                     <span sidebar-toggle-item="">{title ?? "none"}</span>
                     <div className="ml-auto flex gap-1">
                         <BiCaretRight
                             className={`ml-auto duration-200 ${
-                                colapse ? `rotate-90` : ``
+                                colapse == dropdownId ? `rotate-90` : ``
                             }`}
                         />
                         {icon ? icon : <AiFillAppstore />}
                     </div>
                 </button>
 
-                <ul className={`${colapse ? `block` : `hidden`} space-y-2`}>
+                <ul
+                    className={`${
+                        colapse == dropdownId ? `block` : `hidden`
+                    } space-y-2`}
+                >
                     {lists ? (
                         lists.map((list) => {
                             return (

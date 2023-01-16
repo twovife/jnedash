@@ -36,7 +36,10 @@ export default function Navbar({ auth, hideSidebar }) {
         setTheme(theme === "dark" ? "light" : "dark");
     };
     return (
-        <nav className="flex p-4 items-center">
+        <nav className="flex p-4 items-center  bg-white dark:bg-gray-800 shadow sticky top-0 w-full">
+            <h1 className="mr-3 font-semibold text-xl text-black dark:text-white">
+                E - Care
+            </h1>
             <NavButon onClick={hideSidebar}>
                 <GiHamburgerMenu className="block h-5 w-auto fill-current" />
             </NavButon>
@@ -61,7 +64,7 @@ export default function Navbar({ auth, hideSidebar }) {
                     <div
                         className={`${
                             dropDown ? "absolute" : "hidden"
-                        } right-0 z-10 w-72 bg-white rounded divide-y divide-gray-100 shadow dark:bg-slate-800 dark:divide-gray-700`}
+                        } right-0 z-10 w-72 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-800 dark:divide-gray-700`}
                     >
                         <div className="p-4">
                             <div className="font-medium text-base text-gray-800">
