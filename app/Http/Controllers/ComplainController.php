@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ComplainStoreRequest;
 use App\Models\Complain;
+use App\Models\ComplainCase;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -24,9 +25,16 @@ class ComplainController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function autentikasiresi()
+    {
+        //
+    }
     public function create()
     {
-        return Inertia::render('Ecare/Create/Create');
+        return Inertia::render('Ecare/Create/Create', [
+            'complaincase' => ComplainCase::all()
+        ]);
     }
 
     /**

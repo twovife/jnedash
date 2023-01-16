@@ -4,9 +4,9 @@ import TextInput from "@/Components/TextInput";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/inertia-react";
 import React from "react";
-import TicketCheckAwb from "./Partials/TicketCheckAwb";
+import TicketCheckAwb from "../Partials/TicketCheckAwb";
 
-export default function Create({ auth, errors, complaincase }) {
+export default function Create({ auth, errors }) {
     return (
         <Authenticated
             auth={auth}
@@ -18,9 +18,10 @@ export default function Create({ auth, errors, complaincase }) {
             }
         >
             <Head title="Ecare" />
+
             <ContentWrap>
                 <div className="max-w-xl mx-auto">
-                    <TicketCheckAwb complaincase={complaincase} />
+                    <TicketCheckAwb />
                 </div>
             </ContentWrap>
         </Authenticated>

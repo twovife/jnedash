@@ -75,6 +75,7 @@ Route::prefix('claim')->name('claim.')->group(function () { //done
 
 Route::prefix('ecare')->name('ecare.')->group(function () {
     Route::get('/', [ComplainController::class, 'index'])->name('index');
+    Route::get('/generate', [ComplainController::class, 'generate'])->name('generate');
     Route::get('/create', [ComplainController::class, 'create'])->name('create');
 });
 
