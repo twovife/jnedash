@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomerClaimController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TraceCnoteController;
 use App\Models\Claim;
 use Carbon\Carbon;
 use Illuminate\Foundation\Application;
@@ -74,10 +75,14 @@ Route::prefix('claim')->name('claim.')->group(function () { //done
 
 
 Route::prefix('ecare')->name('ecare.')->group(function () {
+    Route::prefix('trace')->name('trace.')->group(function () {
+        Route::get('/', [TraceCnoteController::class, 'index'])->name('index');
+    });
     Route::get('/', [ComplainController::class, 'index'])->name('index');
     Route::get('/generate', [ComplainController::class, 'generate'])->name('generate');
     Route::get('/create', [ComplainController::class, 'create'])->name('create');
 });
+
 
 Route::get('/jsons', function () {
     $content = json_decode(file_get_contents(storage_path('app\public\zoning.json')), true);
