@@ -1,6 +1,6 @@
 import InputError from "@/Components/InputError";
 import Loading from "@/Components/Loading";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import axios from "axios";
 import React, { useState } from "react";
 import Input from "./Partials/Input";

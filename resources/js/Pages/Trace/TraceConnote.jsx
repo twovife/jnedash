@@ -1,6 +1,6 @@
 import ContentWrap from "@/Components/ContentWrap";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import React from "react";
 import Tracer from "./Partials/Tracer";
 

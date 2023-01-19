@@ -2,7 +2,7 @@ import ImageShow from "@/Components/ImageShow";
 import Modal from "@/Components/Modal";
 import Paginate from "@/Components/Paginate";
 import PrimaryButton from "@/Components/PrimaryButton";
-import { useForm } from "@inertiajs/inertia-react";
+import { useForm } from "@inertiajs/react";
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import { BsFillCloudDownloadFill } from "react-icons/bs";

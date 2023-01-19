@@ -2,8 +2,8 @@ import ContentWrap from "@/Components/ContentWrap";
 import Loading from "@/Components/Loading";
 import Toasts from "@/Components/Toasts";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Inertia } from "@inertiajs/inertia";
-import { Head } from "@inertiajs/inertia-react";
+import { router } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import ClosedTables from "./Partials/ClosedTables";
 
@@ -23,7 +23,7 @@ export default function Closed({
         setSearchFilter(e.target.value);
         clearTimeout(filter);
         const newFilter = setTimeout(() => {
-            Inertia.get(
+            router.get(
                 route("eclaim.closed"),
                 { search: e.target.value },
                 {

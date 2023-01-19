@@ -4,10 +4,10 @@ import MiniLoading from "@/Components/MiniLoading";
 import Modal from "@/Components/Modal";
 import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
-import { Inertia } from "@inertiajs/inertia";
+import { router } from "@inertiajs/react";
 import axios from "axios";
 import dayjs from "dayjs";
-// import { Inertia } from "@inertiajs/inertia";
+// import { router } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
 

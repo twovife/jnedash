@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/inertia-react";
+import { Link } from "@inertiajs/react";
 import React, { useState } from "react";
 import { BiGridSmall, BiCaretRight } from "react-icons/bi";
 import { AiFillAppstore } from "react-icons/ai";

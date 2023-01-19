@@ -1,7 +1,7 @@
 import ContentWrap from "@/Components/ContentWrap";
 import LinkButton from "@/Components/LinkButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import React from "react";
 import { BiArrowBack } from "react-icons/bi";
 import CheckAwb from "./Partials/CheckAwb";

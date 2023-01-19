@@ -3,8 +3,8 @@ import LinkButton from "@/Components/LinkButton";
 import Loading from "@/Components/Loading";
 import Toasts from "@/Components/Toasts";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Inertia } from "@inertiajs/inertia";
-import { Head } from "@inertiajs/inertia-react";
+import { router } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 import React, { useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import MonitoringTables from "./Partials/MonitoringTables";
@@ -31,7 +31,7 @@ export default function Open({
     });
 
     const onFilterChange = (e) => {
-        Inertia.get(route("eclaim.monitoring"), searchParams, {
+        router.get(route("eclaim.monitoring"), searchParams, {
             preserveState: true,
             onStart: (visit) => {
                 setLoading(true);

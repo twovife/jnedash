@@ -3,7 +3,7 @@ import InputLabel from "@/Components/InputLabel";
 import Loading from "@/Components/Loading";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
-import { useForm } from "@inertiajs/inertia-react";
+import { useForm } from "@inertiajs/react";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import {

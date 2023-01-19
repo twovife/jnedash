@@ -2,7 +2,7 @@ import ContentWrap from "@/Components/ContentWrap";
 import InputLabel from "@/Components/InputLabel";
 import TextInput from "@/Components/TextInput";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import React from "react";
 import TicketCheckAwb from "../Partials/TicketCheckAwb";
 

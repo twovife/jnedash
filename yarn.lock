@@ -333,28 +333,23 @@
   dependencies:
     "client-only" "^0.0.1"
 
-"@inertiajs/inertia-react@^0.8.1":
-  "integrity" "sha512-9Uu7t4EA9FrcREwWnOU/qW5i4hYFt+uFn5cqP6RGJo8lJS4u8t6Q9358oHuQUKbFEbaIjUu7aslCL3/Istctlg=="
-  "resolved" "https://registry.npmjs.org/@inertiajs/inertia-react/-/inertia-react-0.8.1.tgz"
-  "version" "0.8.1"
+"@inertiajs/core@1.0.0":
+  "integrity" "sha512-V8GgUMqwD6L0A+/O5EEnoCKI/CJ6o33/PUlrjte2skAixZmuNjL3AcP1pB5xUPLMFxGONpZVU2BTpqTC2ppLGA=="
+  "resolved" "https://registry.npmjs.org/@inertiajs/core/-/core-1.0.0.tgz"
+  "version" "1.0.0"
   dependencies:
-    "lodash.isequal" "^4.5.0"
-
-"@inertiajs/inertia@^0.11.0", "@inertiajs/inertia@^0.6.0 || ^0.7.0 || ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0":
-  "integrity" "sha512-btmV53c54oW4Z9XF0YyTdIUnM7ue0ONy3/KJOz6J1C5CYIwimiKfDMpz8ZbGJuxS+SPdOlNsqj2ZhlHslpJRZg=="
-  "resolved" "https://registry.npmjs.org/@inertiajs/inertia/-/inertia-0.11.1.tgz"
-  "version" "0.11.1"
-  dependencies:
-    "axios" "^0.21.1"
+    "axios" "^1.2.0"
     "deepmerge" "^4.0.0"
+    "nprogress" "^0.2.0"
     "qs" "^6.9.0"
 
-"@inertiajs/progress@^0.2.6":
-  "integrity" "sha512-zxadfLlBPIUvTE9g5k71V/Ayzo8P9kEp4hV4UKywCC2kURufxV7bycbZqU1GeMCFGDT+VRrjXNl676Pwwa1HoQ=="
-  "resolved" "https://registry.npmjs.org/@inertiajs/progress/-/progress-0.2.7.tgz"
-  "version" "0.2.7"
+"@inertiajs/react@^1.0.0":
+  "integrity" "sha512-oJnLjV1qw2zif5LRta3ota+pXbc8N7NZ8JeoYsJk/DeOlv6S/Yz6WZYGksVUu0zxcpoYeMZEZ3q7vxiq+0UhkA=="
+  "resolved" "https://registry.npmjs.org/@inertiajs/react/-/react-1.0.0.tgz"
+  "version" "1.0.0"
   dependencies:
-    "nprogress" "^0.2.0"
+    "@inertiajs/core" "1.0.0"
+    "lodash.isequal" "^4.5.0"
 
 "@jridgewell/gen-mapping@^0.1.0":
   "integrity" "sha512-sQXCasFk+U8lWYEe66WxRDOE9PjVz4vSM51fTu3Hw+ClTpUSQb718772vH3pyS5pShp6lvQM7SxgIDXXXmOX7w=="
@@ -599,14 +594,7 @@
     "picocolors" "^1.0.0"
     "postcss-value-parser" "^4.2.0"
 
-"axios@^0.21.1":
-  "integrity" "sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg=="
-  "resolved" "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz"
-  "version" "0.21.4"
-  dependencies:
-    "follow-redirects" "^1.14.0"
-
-"axios@^1.1.2":
+"axios@^1.1.2", "axios@^1.2.0":
   "integrity" "sha512-I88cFiGu9ryt/tfVEi4kX2SITsvDddTajXTOFmt2uK1ZVA8LytjtdeyefdQWEf5PU8w+4SSJDoYnggflB5tW4A=="
   "resolved" "https://registry.npmjs.org/axios/-/axios-1.2.1.tgz"
   "version" "1.2.1"
@@ -1127,7 +1115,7 @@
     "@popperjs/core" "^2.9.3"
     "mini-svg-data-uri" "^1.4.3"
 
-"follow-redirects@^1.14.0", "follow-redirects@^1.15.0":
+"follow-redirects@^1.15.0":
   "integrity" "sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA=="
   "resolved" "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.2.tgz"
   "version" "1.15.2"
@@ -1620,9 +1608,9 @@
   "version" "3.0.0"
 
 "object-inspect@^1.9.0":
-  "integrity" "sha512-z+cPxW0QGUp0mcqcsgQyLVRDoXFQbXOwBaqyF7VIgI4TWNQsDHrBpUQslRmIfAoYWdYzs6UlKJtB2XJpTaNSpQ=="
-  "resolved" "https://registry.npmjs.org/object-inspect/-/object-inspect-1.12.2.tgz"
-  "version" "1.12.2"
+  "integrity" "sha512-geUvdk7c+eizMNUDkRpW1wJwgfOiOeHbxBR/hLXK1aT6zmVSO0jsQcs7fj6MGw89jC/cjGfLcNOrtMYtGqm81g=="
+  "resolved" "https://registry.npmjs.org/object-inspect/-/object-inspect-1.12.3.tgz"
+  "version" "1.12.3"
 
 "once@^1.3.0":
   "integrity" "sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w=="

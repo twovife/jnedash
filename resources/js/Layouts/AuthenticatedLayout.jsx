@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import { VscClose } from "react-icons/vsc";
-import { Link } from "@inertiajs/inertia-react";
+import { Link } from "@inertiajs/react";
 import NavButon from "@/Components/NavButon";
 import Sidebar from "./Partials/Sidebar";
 import Navbar from "./Partials/Navbar";

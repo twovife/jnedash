@@ -3,8 +3,8 @@ import LinkButton from "@/Components/LinkButton";
 import Loading from "@/Components/Loading";
 import Toasts from "@/Components/Toasts";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Inertia } from "@inertiajs/inertia";
-import { Head } from "@inertiajs/inertia-react";
+import { router } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import ProccessedTables from "./Partials/ProccessedTables";
@@ -25,7 +25,7 @@ export default function Processed({
         setSearchFilter(e.target.value);
         clearTimeout(filter);
         const newFilter = setTimeout(() => {
-            Inertia.get(
+            router.get(
                 route("eclaim.processed"),
                 { search: e.target.value },
                 {

@@ -1,4 +1,4 @@
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import dayjs from "dayjs";
 import React from "react";
 

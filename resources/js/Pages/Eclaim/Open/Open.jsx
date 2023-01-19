@@ -3,8 +3,8 @@ import LinkButton from "@/Components/LinkButton";
 import Loading from "@/Components/Loading";
 import Toasts from "@/Components/Toasts";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Inertia } from "@inertiajs/inertia";
-import { Head } from "@inertiajs/inertia-react";
+import { router } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 import { get } from "lodash";
 import React, { useEffect, useState } from "react";
 import { BiPlus } from "react-icons/bi";
@@ -26,7 +26,7 @@ export default function Open({
         setSearchFilter(e.target.value);
         clearTimeout(filter);
         const newFilter = setTimeout(() => {
-            Inertia.get(
+            router.get(
                 route("eclaim.open"),
                 { search: e.target.value },
                 {
