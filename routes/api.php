@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ApiEcareController;
 use App\Http\Controllers\Api\ApiEclaimController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,4 +28,5 @@ Route::name('api.')->group(function () {
         Route::get('/openclaim', [ApiEclaimController::class, 'openclaim'])->name('openclaim');
         Route::get('/processed', [ApiEclaimController::class, 'processed'])->name('processed');
     });
+    Route::get('/tracking', [ApiEcareController::class, 'tracking'])->name('tracking');
 });
