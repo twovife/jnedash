@@ -28,4 +28,9 @@ class Complain extends Model
         'user_create',
         'user_closed',
     ];
+
+    public function cnote()
+    {
+        return $this->belongsTo(Connote::class, 'connote_id', 'id');
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Complain;
 use App\Models\CsZone;
 
 class ApiEcareController extends Controller
@@ -31,12 +32,25 @@ class ApiEcareController extends Controller
         $detail_array = json_decode(json_encode((array)simplexml_load_string($detail_xml)), 1);
         $detail_cnote['detail'] =  $detail_array['Entry'] ?? null;
 
+        $detail_cnote['detail']['claimable'] = str_contains($detail_cnote['shipper']['origin'], 'KDR') ? true : false;
+        $detail_cnote['detail']['complainable'] = true;
 
-        if (!$detail_cnote['shipper']) {
-            return response()->json(['message' => 'Nomor Resi Tidak ditemukan'], 404);
+
+        if (!str_contains($detail_cnote['receiver']['destination'], 'KDR') && !str_contains($detail_cnote['shipper']['origin'], 'KDR')) {
+            return response()->json(['message' => 'Nomor Resi Diluar Area Kediri'], 404);
         }
-        $origin_zone =  CsZone::query()->where('city_code', $detail_cnote['shipper']['origin'])->first();
-        $detail_cnote['shipper']['origin_zone'] = $origin_zone->city_zone;
+
+
+        $zona =  CsZone::query()->where('city_code', $detail_cnote['receiver']['destination'])->first();
+        $detail_cnote['receiver']['zona'] = $zona->city_zone;
+
+        $data = Complain::whereHas('cnote', function ($query) use ($awb) {
+            $query->where('connote', $awb);
+        })->first();
+
+        if ($data) {
+            return response()->json(['message' => 'Nomor Resi Sudah Di input'], 409);
+        }
 
         return response()->json($detail_cnote, 200);
     }

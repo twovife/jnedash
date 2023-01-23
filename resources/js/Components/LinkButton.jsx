@@ -49,6 +49,7 @@ export default function LinkButton({
         <Link
             href={href}
             as={type}
+            {...props}
             className={
                 `disabled:cursor-not-allowed flex gap-2 items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white tracking-widest focus:outline-none focus:ring-2 ${
                     processing && "opacity-25"
