@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput";
 import { Button } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 
-const TicketCheckAwb = ({ complaincase }) => {
+const TicketCheckAwb = ({ auth, error, ...props }) => {
     const [csCategory, setCsCategory] = useState();
     const [csCases, setCsCases] = useState([]);
     const [csSubCases, setCsSubCases] = useState([]);
@@ -64,7 +64,6 @@ const TicketCheckAwb = ({ complaincase }) => {
         const filter = complaincase.filter(
             (item) => item.category == category && item.case === value
         );
-        console.log(filter);
         const subCaseUniq = [...new Set(filter.map((item) => item.sub_case))];
         const subCaseMap = subCaseUniq.map((item) => {
             return {

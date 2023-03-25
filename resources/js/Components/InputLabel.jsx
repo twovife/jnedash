@@ -1,4 +1,10 @@
-export default function InputLabel({ forInput, value, className, children }) {
+export default function InputLabel({
+    forInput,
+    value,
+    className,
+    children,
+    optional,
+}) {
     return (
         <label
             htmlFor={forInput}
@@ -8,6 +14,9 @@ export default function InputLabel({ forInput, value, className, children }) {
             }
         >
             {value ? value : children}
+            {optional ? (
+                <i className="text-xs opacity-70">&nbsp;(optional)</i>
+            ) : null}
         </label>
     );
 }

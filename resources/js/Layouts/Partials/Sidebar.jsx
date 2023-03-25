@@ -27,21 +27,15 @@ export default function Sidebar() {
                     lists={[
                         {
                             id: 1,
-                            href: route("ecare.create"),
-                            name: "Create Ticket",
-                            active: route().current("eclaim.open"),
+                            href: route("ecare.trace.index"),
+                            name: "Ticketing CS",
+                            active: route().current("ecare.trace.index"),
                         },
                         {
                             id: 2,
-                            href: route("eclaim.processed"),
-                            name: "Processed Ticket",
-                            active: route().current("eclaim.processed"),
-                        },
-                        {
-                            id: 3,
-                            href: route("eclaim.closed"),
-                            name: "Monitoring Ticket",
-                            active: route().current("eclaim.closed"),
+                            href: route("ecare.index"),
+                            name: "Report Ticketing",
+                            active: route().current("ecare.index"),
                         },
                     ]}
                 />

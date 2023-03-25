@@ -28,5 +28,10 @@ Route::name('api.')->group(function () {
         Route::get('/openclaim', [ApiEclaimController::class, 'openclaim'])->name('openclaim');
         Route::get('/processed', [ApiEclaimController::class, 'processed'])->name('processed');
     });
+
+    Route::prefix('ecare')->name('ecare.')->group(function () {
+        Route::get('/tracking', [ApiEcareController::class, 'tracking'])->name('tracking');
+        Route::get('/comments/{id}', [ApiEcareController::class, 'getComments'])->name('getcomments');
+    });
     Route::get('/tracking', [ApiEcareController::class, 'tracking'])->name('tracking');
 });

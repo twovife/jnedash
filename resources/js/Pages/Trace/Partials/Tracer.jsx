@@ -39,8 +39,6 @@ const Tracer = () => {
             });
     };
 
-    console.log(responses);
-
     return (
         <div>
             {responses ? (
@@ -101,6 +99,21 @@ const Tracer = () => {
                                 {responses.receiver.zona}
                             </div>
                         </div>
+                    </div>
+                    <div className="w-full flex justify-end gap-2">
+                        <PrimaryButton
+                            theme={"secondary"}
+                            title={"Create Claim"}
+                            disabled
+                        />
+                        <LinkButton
+                            theme={"primary"}
+                            title={"Create Cs Ticket"}
+                            type={"a"}
+                            method={"get"}
+                            data={values}
+                            href={route("ecare.create")}
+                        />
                     </div>
                 </div>
             ) : (

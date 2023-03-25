@@ -58,11 +58,26 @@ class ClaimController extends Controller
 
         $shipper_xml = file_get_contents('http://hybrid.jne.co.id:9763/services/displayconnote.SOAP12Endpoint/displayshipper?pcnote=' . $cnote_no);
         $shipper_array = json_decode(json_encode((array)simplexml_load_string($shipper_xml)), 1);
-        $shipper =  $shipper_array['Entry'] ?? null;
+        $shippers =  $shipper_array['Entry'] ?? null;
+        $shipper = [
+            'origin' => $shippers['origin'],
+            'shipper_name' => $shippers['shipper_name'],
+            'city' => !str_contains($shippers['origin'], '10000') ? 'KEDIRI' : (!str_contains($shippers['origin'], '10100') ? 'TULUNG AGUNG' : 'TRENGGALEK'),
+            'phone' => $shippers['phone'],
+        ];
+
 
         $receiver_xml = file_get_contents('http://hybrid.jne.co.id:9763/services/displayconnote.SOAP12Endpoint/displayreceiver?pcnote=' . $cnote_no);
         $receiver_array = json_decode(json_encode((array)simplexml_load_string($receiver_xml)), 1);
-        $receiver =  $receiver_array['Entry'] ?? null;
+        $receivers =  $receiver_array['Entry'] ?? null;
+        $receiver = [
+            'destination' => $receivers['destination'],
+            'receiver_name' => $receivers['receiver_name'],
+            'address' => $receivers['address'],
+            'city' =>  is_array($receivers['city']) ? $receivers['destination'] : $receivers['city'],
+            'phone' => $receivers['phone'],
+            'zona' => $receivers['zona'],
+        ];
 
         $detail_xml = file_get_contents('http://hybrid.jne.co.id:9763/services/displayconnote.SOAP12Endpoint/displayconnote1?pcnote=' . $cnote_no);
         $detail_array = json_decode(json_encode((array)simplexml_load_string($detail_xml)), 1);
@@ -109,6 +124,7 @@ class ClaimController extends Controller
             DB::commit();
         } catch (Exception  $e) {
             DB::rollBack();
+            dd($e);
             return redirect()->route('eclaim.create')->with('_error', 'Terjadi Kesalahan saat input data, mohon refresh browser anda terlebih dahulu 2');
         }
 

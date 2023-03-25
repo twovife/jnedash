@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\ComplainController;
+use App\Http\Controllers\ComplainRequestController;
 use App\Http\Controllers\CustomerClaimController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TraceCnoteController;
 use App\Models\Claim;
+use App\Models\ComplainRequest;
 use Carbon\Carbon;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -74,6 +76,8 @@ Route::prefix('claim')->name('claim.')->group(function () { //done
 });
 
 
+Route::get('/', [ComplainRequestController::class, 'customer'])->name('customepage');
+
 Route::prefix('ecare')->name('ecare.')->group(function () {
     Route::prefix('trace')->name('trace.')->group(function () {
         Route::get('/', [TraceCnoteController::class, 'index'])->name('index');
@@ -81,6 +85,8 @@ Route::prefix('ecare')->name('ecare.')->group(function () {
     Route::get('/', [ComplainController::class, 'index'])->name('index');
     Route::get('/generate', [ComplainController::class, 'generate'])->name('generate');
     Route::get('/create', [ComplainController::class, 'create'])->name('create');
+    Route::post('/', [ComplainController::class, 'store'])->name('store');
+    Route::post('/comment', [ComplainController::class, 'commentstore'])->name('commentstore');
 });
 
 

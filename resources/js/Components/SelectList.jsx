@@ -7,6 +7,7 @@ export default function SelectList({
     required,
     handleChange,
     options,
+    nullValue,
     ...props
 }) {
     return (
@@ -22,17 +23,22 @@ export default function SelectList({
                 {...props}
             >
                 {options ? (
-                    options.map((opt) => (
-                        <option
-                            key={opt.id}
-                            value={opt.value}
-                            selected={opt.selected}
-                        >
-                            {opt.display}
-                        </option>
-                    ))
+                    <>
+                        {nullValue ? (
+                            <option value={""}>Pilih Salah Satu</option>
+                        ) : null}
+                        {options.map((opt) => (
+                            <option
+                                key={opt.id}
+                                value={opt.value}
+                                selected={opt.selected}
+                            >
+                                {opt.display}
+                            </option>
+                        ))}
+                    </>
                 ) : (
-                    <option value={""}>Select One</option>
+                    <option value={""}>Pilih Salah Satu</option>
                 )}
             </select>
         </div>

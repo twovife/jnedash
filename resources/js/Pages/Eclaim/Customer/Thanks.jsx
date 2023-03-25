@@ -13,7 +13,7 @@ export default function Thanks({ awb }) {
                     Silahkan cek email{" "}
                     <span className="text-blue-500 underline font-semibold">
                         {awb.complainant_email}
-                    </span>{" "}
+                    </span>
                     untuk mendapatkan update laporan claim anda.
                 </div>
             </div>

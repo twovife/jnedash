@@ -5,12 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ComplainComment extends Model
+class ComplainRequest extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'complain_id',
-        'comment',
-        'user_comment'
-    ];
 }

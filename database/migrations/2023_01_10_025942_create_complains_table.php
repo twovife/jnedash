@@ -15,11 +15,9 @@ return new class extends Migration
     {
         Schema::create('complains', function (Blueprint $table) {
             $table->id();
+            $table->string('no_ticket')->nullable();
             $table->integer('branch')->nullable();
             $table->integer('complainsource_id')->nullable();
-            $table->integer('caller_id')->nullable();
-            $table->string('caller_name', 255)->nullable();
-            $table->integer('is_sending_office')->nullable();
             $table->integer('connote_id')->nullable();
             $table->string('complain_case_id', 400)->nullable();
             $table->enum('zona', ['a', 'b', 'c', 'd'])->nullable();
@@ -31,6 +29,7 @@ return new class extends Migration
             $table->integer('claim_approve')->nullable();
             $table->string('note', 4000)->nullable();
             $table->enum('status', ['open', 'process', 'close'])->nullable();
+            $table->string('followup_by', 255)->nullable();
             $table->integer('user_create')->nullable();
             $table->integer('user_closed')->nullable();
             $table->timestamps();
