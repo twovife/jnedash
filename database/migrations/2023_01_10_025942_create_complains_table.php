@@ -27,11 +27,16 @@ return new class extends Migration
             $table->enum('sla_status', ['over', 'ontime'])->nullable();
             $table->integer('claim_propose')->nullable();
             $table->integer('claim_approve')->nullable();
+            $table->string('pic_followup', 255)->nullable();
             $table->string('note', 4000)->nullable();
             $table->enum('status', ['open', 'process', 'close'])->nullable();
             $table->string('followup_by', 255)->nullable();
             $table->integer('user_create')->nullable();
             $table->integer('user_closed')->nullable();
+            $table->integer('caller_category')->nullable();
+            $table->string('caller_sub_category', 255)->nullable();
+            $table->string('caller_contact_name', 255)->nullable();
+            $table->string('caller_contact_person', 255)->nullable();
             $table->timestamps();
         });
     }

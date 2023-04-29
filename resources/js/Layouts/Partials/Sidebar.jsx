@@ -26,6 +26,12 @@ export default function Sidebar() {
                     dropdownId={2}
                     lists={[
                         {
+                            id: 3,
+                            href: route("ecare.requestComplain"),
+                            name: "Request CS",
+                            active: route().current("ecare.requestComplain"),
+                        },
+                        {
                             id: 1,
                             href: route("ecare.trace.index"),
                             name: "Ticketing CS",

@@ -11,6 +11,7 @@ use App\Http\Controllers\TraceCnoteController;
 use App\Models\Claim;
 use App\Models\ComplainRequest;
 use Carbon\Carbon;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -75,14 +76,17 @@ Route::prefix('claim')->name('claim.')->group(function () { //done
     Route::get('/{ticket_id}/customerthanks', [ClaimController::class, 'customerthanks'])->name('customerthanks');
 });
 
-
 Route::get('/', [ComplainRequestController::class, 'customer'])->name('customepage');
+Route::get('/test', [ComplainRequestController::class, 'test'])->name('test');
+Route::post('/', [ComplainRequestController::class, 'customerStore'])->name('customerStore');
+
 
 Route::prefix('ecare')->name('ecare.')->group(function () {
     Route::prefix('trace')->name('trace.')->group(function () {
         Route::get('/', [TraceCnoteController::class, 'index'])->name('index');
     });
     Route::get('/', [ComplainController::class, 'index'])->name('index');
+    Route::get('/request-complain', [ComplainRequestController::class, 'requestComplain'])->name('requestComplain');
     Route::get('/generate', [ComplainController::class, 'generate'])->name('generate');
     Route::get('/create', [ComplainController::class, 'create'])->name('create');
     Route::post('/', [ComplainController::class, 'store'])->name('store');

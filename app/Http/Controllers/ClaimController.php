@@ -66,7 +66,6 @@ class ClaimController extends Controller
             'phone' => $shippers['phone'],
         ];
 
-
         $receiver_xml = file_get_contents('http://hybrid.jne.co.id:9763/services/displayconnote.SOAP12Endpoint/displayreceiver?pcnote=' . $cnote_no);
         $receiver_array = json_decode(json_encode((array)simplexml_load_string($receiver_xml)), 1);
         $receivers =  $receiver_array['Entry'] ?? null;
@@ -75,8 +74,7 @@ class ClaimController extends Controller
             'receiver_name' => $receivers['receiver_name'],
             'address' => $receivers['address'],
             'city' =>  is_array($receivers['city']) ? $receivers['destination'] : $receivers['city'],
-            'phone' => $receivers['phone'],
-            'zona' => $receivers['zona'],
+            'phone' => $receivers['phone']
         ];
 
         $detail_xml = file_get_contents('http://hybrid.jne.co.id:9763/services/displayconnote.SOAP12Endpoint/displayconnote1?pcnote=' . $cnote_no);
@@ -107,7 +105,7 @@ class ClaimController extends Controller
         $request['signature'] = time() . Str::random(7);
         $request['sla'] = Carbon::now()->addDay(7);
 
-        if (!$shipper || !str_contains($shipper['origin'], 'KDR')) {
+        if (!$shippers || !str_contains($shipper['origin'], 'KDR')) {
             return redirect()->route('eclaim.create')->with('_error', 'Terjadi Kesalahan saat input data, mohon refresh browser anda terlebih dahulu 1');
         }
 

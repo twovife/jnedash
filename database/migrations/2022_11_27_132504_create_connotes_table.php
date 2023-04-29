@@ -28,6 +28,21 @@ return new class extends Migration
             $table->integer('weight')->nullable();
             $table->integer('amount')->nullable();
             $table->integer('insurance_value')->nullable();
+
+            $table->string('zona')->nullable();
+            $table->string('origin')->nullable();
+            $table->string('destination')->nullable();
+
+            $table->string('shipper_name')->nullable();
+            $table->string('shipper_address')->nullable();
+            $table->string('shipper_city')->nullable();
+            $table->string('shipper_phone')->nullable();
+
+            $table->string('receiver_name')->nullable();
+            $table->string('receiver_address')->nullable();
+            $table->string('receiver_city')->nullable();
+            $table->string('receiver_phone')->nullable();
+
             $table->timestamps();
         });
     }

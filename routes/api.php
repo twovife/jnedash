@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ApiEcareController;
 use App\Http\Controllers\Api\ApiEclaimController;
+use App\Http\Controllers\Api\ApiHandlerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,4 +35,6 @@ Route::name('api.')->group(function () {
         Route::get('/comments/{id}', [ApiEcareController::class, 'getComments'])->name('getcomments');
     });
     Route::get('/tracking', [ApiEcareController::class, 'tracking'])->name('tracking');
+
+    Route::get('apijneecaretrackingresi', [ApiHandlerController::class, 'trackingResi'])->name('trackingResi');
 });
