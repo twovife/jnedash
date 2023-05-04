@@ -55,23 +55,9 @@ class ComplainRequestController extends Controller
         $shipper_array = json_decode(json_encode((array)simplexml_load_string($shipper_xml)), 1);
         $shippers =  $shipper_array['Entry'] ?? null;
 
-        $shipper = [
-            'origin' => $shippers['origin'],
-            'shipper_name' => $shippers['shipper_name'],
-            'city' => $shippers['origin'],
-            'phone' => $shippers['phone'],
-        ];
-
         $receiver_xml = file_get_contents('http://hybrid.jne.co.id:9763/services/displayconnote.SOAP12Endpoint/displayreceiver?pcnote=' . $cnote_no);
         $receiver_array = json_decode(json_encode((array)simplexml_load_string($receiver_xml)), 1);
         $receivers =  $receiver_array['Entry'] ?? null;
-        $receiver = [
-            'destination' => $receivers['destination'],
-            'receiver_name' => $receivers['receiver_name'],
-            'address' => is_array($receivers['address']) ? $receivers['destination'] : $receivers['address'],
-            'city' =>  is_array($receivers['city']) ? $receivers['destination'] : $receivers['city'],
-            'phone' => $receivers['phone'],
-        ];
 
         $detail_xml = file_get_contents('http://hybrid.jne.co.id:9763/services/displayconnote.SOAP12Endpoint/displayconnote1?pcnote=' . $cnote_no);
         $detail_array = json_decode(json_encode((array)simplexml_load_string($detail_xml)), 1);
@@ -90,12 +76,23 @@ class ComplainRequestController extends Controller
             'weight' => is_array($details['weight']) ? 0 : $details['weight'],
             'amount' => is_array($details['amount']) ? 0 : $details['amount'],
             'insurance_value' => is_array($details['insurance_value']) ? 0 : $details['insurance_value'],
+
+            'origin' => $shippers['origin'],
+            'shipper_name' => $shippers['shipper_name'],
+            'shipper_city' => $shippers['origin'],
+            'shipper_phone' => $shippers['phone'],
+
+            'destination' => $receivers['destination'],
+            'receiver_name' => $receivers['receiver_name'],
+            'receiver_address' => is_array($receivers['address']) ? $receivers['destination'] : $receivers['address'],
+            'receiver_city' =>  is_array($receivers['city']) ? $receivers['destination'] : $receivers['city'],
+            'receiver_phone' => $receivers['phone'],
         ];
 
 
 
-        $contactName = $request->usenumber == true ? ($request->caller_category == 2 ? $receiver['receiver_name'] : $shipper['shipper_name']) : false;
-        $contactPhone = $request->usenumber == true ? ($request->caller_category == 2 ? $receiver['phone'] : $shipper['phone']) : false;
+        $contactName = $request->usenumber == true ? ($request->caller_category == 2 ? $detail['receiver_name'] : $detail['shipper_name']) : false;
+        $contactPhone = $request->usenumber == true ? ($request->caller_category == 2 ? $detail['receiver_phone'] : $detail['shipper_phone']) : false;
         $data = [
             'no_request' =>  'REQCS' . date('d') . strtoupper(Str::random(4)) . date('ym'),
             'caller_category' => $request->caller_category,
@@ -106,19 +103,11 @@ class ComplainRequestController extends Controller
             'request_status' => 'open',
         ];
 
-        // $dataload = [
-        //     'shipper' => $shipper,
-        //     'receiver' => $receiver,
-        //     'detail' => $detail,
-        //     'data' => $data,
-        // ];
-        // dd($dataload);
+
 
         try {
             DB::beginTransaction();
             $generateAwb = Connote::firstOrCreate(['connote' => $cnote_no], $detail);
-            $generateAwb->receiver()->updateOrCreate(['connote_id' => $generateAwb->id], $receiver);
-            $generateAwb->shipper()->updateOrCreate(['connote_id' => $generateAwb->id], $shipper);
             $generateAwb->complainRequest()->create($data);
             DB::commit();
             return redirect()->route('customepage')->with('message', 'Complain Anda akan segera kami proses, Kami akan menghubungi nomor yang telah anda cantumkan, Trimakasih');
@@ -134,13 +123,14 @@ class ComplainRequestController extends Controller
         // dd($data);
         // $filters = request()->data;
         // $data =  ComplainRequest::with('cnote', 'cnote.shipper', 'cnote.receiver', 'callers');
-        $data = ComplainRequest::query()->withFilters();
-        ddd($data->get());
+        // return request()->input('data.find', []);
+        // return request()->input('data.cn');
+        $data = ComplainRequest::query()->with('cnote', 'callers')->withFilters();
 
 
 
         return Inertia::render('Ecare/CustomerRequest/ComplainRequest', [
-            'requests' => ComplainRequest::query()->with('cnote', 'cnote.shipper', 'cnote.receiver', 'callers')->paginate(20),
+            'requests' => $data->paginate(20),
             'filters' => request()->data ?? null
         ]);
     }

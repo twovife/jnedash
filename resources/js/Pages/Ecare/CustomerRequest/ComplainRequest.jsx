@@ -6,6 +6,8 @@ import ComplainRequestTables from "./Partials/ComplainRequestTables";
 import Pagination from "@/Components/Paginate";
 
 const ComplainRequest = ({ auth, errors, requests, filters, ...props }) => {
+    console.log(data);
+    // console.log(requests);
     const { data } = requests;
     const addFilter = (e) => {
         console.log(e);

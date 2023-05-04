@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { GrClose } from "react-icons/gr";
 
 const ComplainRequestTables = ({ datas, filters }) => {
-    console.log(filters);
     const [dataFilter, setDataFilter] = useState({ ...filters });
     const filterObject = Object.keys(dataFilter);
 
@@ -30,7 +29,6 @@ const ComplainRequestTables = ({ datas, filters }) => {
 
     const badges = filterObject.map((filterKey) => {
         const values = dataFilter[filterKey];
-
         const badge = values.map((value) => {
             return (
                 <span className="inline-flex items-center px-3 py-1.5 mr-2 font-medium text-brand-800 bg-brand-100 rounded dark:bg-brand-900 dark:text-brand-300 border border-black/10">
@@ -48,7 +46,6 @@ const ComplainRequestTables = ({ datas, filters }) => {
                 </span>
             );
         });
-
         return badge;
     });
 
@@ -142,7 +139,7 @@ const ComplainRequestTables = ({ datas, filters }) => {
                             </th>
                             <th
                                 scope="col"
-                                data-id="asd"
+                                data-id="tanggal_request"
                                 onClick={addFilter}
                                 className="whitespace-nowrap hover:bg-gray-200 hover:cursor-pointer text-center py-3 px-6"
                             >
@@ -150,7 +147,7 @@ const ComplainRequestTables = ({ datas, filters }) => {
                             </th>
                             <th
                                 scope="col"
-                                data-id="cnote"
+                                data-id="connote"
                                 onClick={addFilter}
                                 className="whitespace-nowrap hover:bg-gray-200 hover:cursor-pointer text-center py-3 px-6"
                             >
@@ -174,7 +171,7 @@ const ComplainRequestTables = ({ datas, filters }) => {
                             </th>
                             <th
                                 scope="col"
-                                data-id="asd"
+                                data-id="caller"
                                 onClick={addFilter}
                                 className="whitespace-nowrap hover:bg-gray-200 hover:cursor-pointer text-center py-3 px-6"
                             >
@@ -182,7 +179,7 @@ const ComplainRequestTables = ({ datas, filters }) => {
                             </th>
                             <th
                                 scope="col"
-                                data-id="asd"
+                                data-id="caller_name"
                                 onClick={addFilter}
                                 className="whitespace-nowrap hover:bg-gray-200 hover:cursor-pointer text-center py-3 px-6"
                             >
@@ -190,7 +187,7 @@ const ComplainRequestTables = ({ datas, filters }) => {
                             </th>
                             <th
                                 scope="col"
-                                data-id="asd"
+                                data-id="caller_cp"
                                 onClick={addFilter}
                                 className="whitespace-nowrap hover:bg-gray-200 hover:cursor-pointer text-center py-3 px-6"
                             >
@@ -198,7 +195,7 @@ const ComplainRequestTables = ({ datas, filters }) => {
                             </th>
                             <th
                                 scope="col"
-                                data-id="asd"
+                                data-id="case_reason"
                                 onClick={addFilter}
                                 className="whitespace-nowrap hover:bg-gray-200 hover:cursor-pointer text-center py-3 px-6"
                             >
@@ -206,7 +203,7 @@ const ComplainRequestTables = ({ datas, filters }) => {
                             </th>
                             <th
                                 scope="col"
-                                data-id="asd"
+                                data-id="request_status"
                                 onClick={addFilter}
                                 className="whitespace-nowrap hover:bg-gray-200 hover:cursor-pointer text-center py-3 px-6"
                             >
@@ -220,7 +217,7 @@ const ComplainRequestTables = ({ datas, filters }) => {
                                 key={key}
                                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center"
                             >
-                                <td className="px-6 py-4">a</td>
+                                <td className="px-6 py-4">{item.no_request}</td>
                                 <td className="px-6 py-4">
                                     {dayjs(item.created_at).format(
                                         "DD-MM-YYYY"
@@ -230,10 +227,10 @@ const ComplainRequestTables = ({ datas, filters }) => {
                                     {item.cnote.connote}
                                 </td>
                                 <td className="px-6 py-4">
-                                    {item.cnote.shipper.origin}
+                                    {item.cnote.origin}
                                 </td>
                                 <td className="px-6 py-4">
-                                    {item.cnote.receiver.destination}
+                                    {item.cnote.destination}
                                 </td>
                                 <td className="px-6 py-4">
                                     {item.callers.caller}

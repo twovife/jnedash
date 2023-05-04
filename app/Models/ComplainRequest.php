@@ -10,6 +10,7 @@ class ComplainRequest extends Model
     use HasFactory;
 
     protected $fillable = [
+        'no_request',
         'connote_id',
         'caller_category',
         'caller_sub_category',
@@ -38,7 +39,9 @@ class ComplainRequest extends Model
         //     $query->whereIn('connote', request()->input('data.cnote'));
         // });
 
-        return $query->when(request()->data['find'], function ($q) {
+        return $query->whereHas('cnote', function ($q) use ($query) {
+            $q->withFilters();
+        })->when(request()->input('data.find', []), function ($q) {
             $keys = request()->data['find'];
             $keys = array_map('strtolower', $keys);
             $q->whereIn('id', request()->data['find'])
@@ -50,8 +53,6 @@ class ComplainRequest extends Model
                 ->orWhereRaw('LOWER(`caller_contact_person`) IN (' . implode(",", array_fill(0, count($keys), '?')) . ')', $keys)
                 ->orWhereRaw('LOWER(`case_reason`) IN (' . implode(",", array_fill(0, count($keys), '?')) . ')', $keys)
                 ->orWhereRaw('LOWER(`request_status`) IN (' . implode(",", array_fill(0, count($keys), '?')) . ')', $keys);
-        })->whereHas('cnote', function ($q) use ($query) {
-            $q->withFilters();
         });
     }
 }
