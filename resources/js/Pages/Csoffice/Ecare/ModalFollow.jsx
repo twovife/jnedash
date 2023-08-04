@@ -7,7 +7,7 @@ import { router, useForm } from "@inertiajs/react";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 
-const FollowUpModal = ({ show, onModalClosed, userLogin }) => {
+const ModalFollow = ({ show, onModalClosed, userLogin }) => {
     const { isShow, id } = show;
     const [details, setDetails] = useState({});
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -35,8 +35,7 @@ const FollowUpModal = ({ show, onModalClosed, userLogin }) => {
 
     const onSubmitForm = (e) => {
         e.preventDefault();
-        console.log(data);
-        post(route("ecare.commentstore"));
+        post(route("csoffice.complain.storecomment", id));
         fetchMyApi();
     };
 
@@ -77,7 +76,7 @@ const FollowUpModal = ({ show, onModalClosed, userLogin }) => {
                                 options={statusCase}
                                 className={"block w-full mt-1"}
                                 name={"status"}
-                                nullValue={true}
+                                nullvalue={true}
                                 onChange={setValues}
                                 required
                             />
@@ -85,6 +84,7 @@ const FollowUpModal = ({ show, onModalClosed, userLogin }) => {
                     </div>
                     <div className="w-full mt-2">
                         <PrimaryButton
+                            disabled={processing}
                             type="submit"
                             className="ml-auto"
                             title={"Submit"}
@@ -129,7 +129,7 @@ const FollowUpModal = ({ show, onModalClosed, userLogin }) => {
                                             {item.comment}
                                         </td>
                                         <td className="text-center">
-                                            {item.user_comment}
+                                            {item.usercomment.username}
                                         </td>
                                     </tr>
                                 ))
@@ -148,4 +148,4 @@ const FollowUpModal = ({ show, onModalClosed, userLogin }) => {
     );
 };
 
-export default FollowUpModal;
+export default ModalFollow;

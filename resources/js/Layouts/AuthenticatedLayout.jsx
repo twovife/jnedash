@@ -73,12 +73,12 @@ export default function Authenticated({
                 />
 
                 {header && (
-                    <header className="flex items-center py-4 px-6">
+                    <header className="flex items-center mt-4 px-6">
                         {header}
                     </header>
                 )}
 
-                <div className="p-4 mt-4">{children}</div>
+                <div className="p-4">{children}</div>
             </div>
         </div>
     );

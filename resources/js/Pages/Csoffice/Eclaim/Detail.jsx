@@ -1,23 +1,17 @@
-import InputLabel from "@/Components/InputLabel";
-import Loading from "@/Components/Loading";
 import MiniLoading from "@/Components/MiniLoading";
 import Modal from "@/Components/Modal";
-import SelectList from "@/Components/SelectList";
-import TextInput from "@/Components/TextInput";
-import { router } from "@inertiajs/react";
 import axios from "axios";
 import dayjs from "dayjs";
-// import { router } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
 
-export default function Detail({ modalShow, closedModal }) {
-    const { id, show } = modalShow;
+export default function Detail({ params, closedModal }) {
+    const { id, show } = params;
     const [value, setValue] = useState(1);
     const [detail, setDetail] = useState();
 
     async function fetchMyApi() {
-        let { data } = await axios(route("eclaim.show", id)).then(
+        let { data } = await axios(route("csoffice.claim.show", id)).then(
             (data) => data
         );
         setDetail(data);
@@ -255,37 +249,28 @@ export default function Detail({ modalShow, closedModal }) {
                                                 ).format("DD/MM/YYYY")}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.shipper.origin}
+                                                {detail.cnote.origin}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {
-                                                    detail.cnote.receiver
-                                                        .destination
-                                                }
+                                                {detail.cnote.destination}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {
-                                                    detail.cnote.shipper
-                                                        .shipper_name
-                                                }
+                                                {detail.cnote.shipper_name}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.shipper.city}
+                                                {detail.cnote.shipper_city}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.shipper.phone}
+                                                {detail.cnote.shipper_phone}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {
-                                                    detail.cnote.receiver
-                                                        .receiver_name
-                                                }
+                                                {detail.cnote.receiver_name}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.receiver.city}
+                                                {detail.cnote.receiver_city}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.receiver.phone}
+                                                {detail.cnote.receiver_phone}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
                                                 {detail.cnote.customer}
@@ -531,19 +516,25 @@ export default function Detail({ modalShow, closedModal }) {
                                                 {detail.status}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {dayjs(
-                                                    detail.processed_at
-                                                ).format("DD/MM/YYYY")}
+                                                {detail.processed_at
+                                                    ? dayjs(
+                                                          detail.processed_at
+                                                      ).format("DD/MM/YYYY")
+                                                    : ""}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6 whitespace-nowrap">
-                                                {dayjs(detail.closed_at).format(
-                                                    "DD/MM/YYYY"
-                                                )}
+                                                {detail.closed_at
+                                                    ? dayjs(
+                                                          detail.closed_at
+                                                      ).format("DD/MM/YYYY")
+                                                    : ""}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {dayjs(detail.sla).format(
-                                                    "DD/MM/YYYY"
-                                                )}
+                                                {detail.sla
+                                                    ? dayjs(detail.sla).format(
+                                                          "DD/MM/YYYY"
+                                                      )
+                                                    : ""}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
                                                 {detail.status_sla}

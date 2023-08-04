@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsFillCheckCircleFill, BsFillCloudDownloadFill } from "react-icons/bs";
 import { NumericFormat } from "react-number-format";
-import Detail from "../../Detail/Detail";
+import Detail from "../../../Csoffice/Eclaim/Detail";
 import ApproveModal from "./ApproveModal";
 import RejectedModal from "./RejectedModal";
 

@@ -94,7 +94,7 @@ class ApiEcareController extends Controller
 
     public function getComments(Request $request)
     {
-        $data = ComplainComment::where('complain_id', $request->id)->get();
+        $data = ComplainComment::with('complain', 'usercomment')->where('complain_id', $request->id)->get();
         return response()->json($data, 200);
     }
 

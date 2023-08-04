@@ -4,12 +4,14 @@ import InputLabel from "@/Components/InputLabel";
 import Modal from "@/Components/Modal";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
-import { useForm } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import { FileInput } from "flowbite-react";
 import React from "react";
 import CurrencyInput from "react-currency-input-field";
 
-export default function ApproveModal({ id, showApprove, closeModal }) {
+export default function ApproveModal({ params, closeModal }) {
+    const { show, id } = params;
+
     const { data, setData, post, processing, errors, clearErrors, reset } =
         useForm({
             claim_approved: "",
@@ -17,6 +19,8 @@ export default function ApproveModal({ id, showApprove, closeModal }) {
             penyelesaian: "",
             pembebanan: "",
         });
+
+    const { flash } = usePage().props;
 
     const onHandleChange = (event) => {
         setData(
@@ -35,30 +39,36 @@ export default function ApproveModal({ id, showApprove, closeModal }) {
         setData(event.target.name, event.target.files[0]);
     };
 
-    const submit = (e) => {
+    const onSubmitForm = (e) => {
         e.preventDefault();
-        console.log(data);
-        post(route("eclaim.approved", id), {
-            _method: "put",
-            preserveScroll: true,
-            onFinish: (visit) => {
-                closedModal();
-            },
-        });
+        post(route("csoffice.claim.approved", id));
     };
 
     const closedModal = () => {
         closeModal();
-        reset();
         clearErrors();
+        reset();
     };
 
     return (
-        <Modal show={showApprove} maxWidth={"md"} onClose={closedModal}>
-            <form onSubmit={submit} className="p-6">
+        <Modal show={show} maxWidth={"md"} onClose={closedModal}>
+            <form onSubmit={onSubmitForm} className="p-6">
                 <h2 className="text-lg font-medium text-gray-900 dark:text-white text-center">
                     Form Approval Claim
                 </h2>
+
+                {flash.message && (
+                    <div className="bg-green-300 p-3 mt-4 rounded">
+                        data berhasil diubah
+                    </div>
+                )}
+
+                {errors.message && (
+                    <div className="bg-rose-300 p-3 mt-4 rounded">
+                        Terjadi Kesalahan, teliti atau refresh halaman dahulu
+                    </div>
+                )}
+
                 <div className="mt-4 flex flex-col lg:grid-cols-2 justify-center items-center gap-4">
                     <div className="w-full">
                         <InputLabel

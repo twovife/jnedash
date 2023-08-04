@@ -7,7 +7,7 @@ export default function SelectList({
     required,
     handleChange,
     options,
-    nullValue,
+    nullvalue,
     ...props
 }) {
     return (
@@ -24,7 +24,7 @@ export default function SelectList({
             >
                 {options ? (
                     <>
-                        {nullValue ? (
+                        {nullvalue ? (
                             <option value={""}>Pilih Salah Satu</option>
                         ) : null}
                         {options.map((opt) => (

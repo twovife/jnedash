@@ -4,6 +4,7 @@ use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\ComplainController;
 use App\Http\Controllers\ComplainRequestController;
 use App\Http\Controllers\CustomerClaimController;
+use App\Http\Controllers\CustomerServiceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\ProfileController;
@@ -31,25 +32,52 @@ use Inertia\Inertia;
 //     return redirect()->to('https://www.jne.co.id/id/beranda');
 // });
 
-Route::get('/', [DashboardController::class, 'index']);
+// Route::get('/', [DashboardController::class, 'index']);
 
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
+Route::controller(CustomerServiceController::class)->prefix('customer-service')->name('cs.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/detail-request/{no_request}', 'detailRequest')->name('detailRequest');
+    Route::prefix('internal')->group(function () {
+        Route::get('/', 'internalIndex')->name('internal');
+        Route::post('/', 'internalStore')->name('internalStore');
+    });
+});
+
+Route::prefix('csoffice')->name('csoffice.')->group(function () {
+    Route::controller(ComplainRequestController::class)->name('complainrequest.')->prefix('complainrequest')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/generate/{complainRequest}', 'generate')->name('generate');
+        Route::post('/generate/{complainRequest}', 'generatestore')->name('generatestore');
+    });
+    Route::controller(ComplainController::class)->name('complain.')->prefix('complain')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::post('/complain/{complain}/storecomment', 'storecomment')->name('storecomment');
+        Route::get('/edit/{complain}', 'edit')->name('edit');
+        Route::put('/update/{complain}', 'update')->name('update');
+        Route::delete('/delete/{complain}', 'destroy')->name('destroy');
+    });
+    Route::controller(ClaimController::class)->name('claim.')->prefix('claim')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::put('/{claim}/proccess', 'proccessdata')->name('proccessdata');
+        Route::post('/{claim}/approved',  'approved')->name('approved');
+        Route::put('/{claim}/rejected',  'rejected')->name('rejected');
+        Route::get('/{claim}',  'show')->name('show');
+    });
+});
+
+
 Route::middleware(['auth'])->group(function () {
     Route::prefix('eclaim')->name('eclaim.')->middleware('permission:cs')->group(function () {
-        Route::get('/', [ClaimController::class, 'index'])->name('index');
-        Route::get('/create', [ClaimController::class, 'create'])->name('create'); //done
-        Route::get('/open', [ClaimController::class, 'open'])->name('open'); //done
-        Route::get('/processed', [ClaimController::class, 'processed'])->name('processed');
+
+
+
         Route::get('/monitoring', [ClaimController::class, 'monitoring'])->name('monitoring');
         Route::get('/exportExcell', [ClaimController::class, 'exportExcell'])->name('exportExcell');
-        Route::get('/closed', [ClaimController::class, 'closed'])->name('closed');
-        Route::put('/{claim}', [ClaimController::class, 'update'])->name('update');
-        Route::put('/{claim}/proccess', [ClaimController::class, 'proccessdata'])->name('processdata');
-        Route::post('/{claim}/approved', [ClaimController::class, 'approved'])->name('approved');
-        Route::put('/{claim}/rejected', [ClaimController::class, 'rejected'])->name('rejected');
-        Route::get('/{claim}', [ClaimController::class, 'show'])->name('show');
     });
 
 
@@ -59,6 +87,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
     });
 });
+
 
 Route::prefix('email')->name('email.')->group(function () {
     Route::get('/createclaim/{ticket_id}', [EmailController::class, 'createclaim'])->name('createclaim');
@@ -76,22 +105,6 @@ Route::prefix('claim')->name('claim.')->group(function () { //done
     Route::get('/{ticket_id}/customerthanks', [ClaimController::class, 'customerthanks'])->name('customerthanks');
 });
 
-Route::get('/', [ComplainRequestController::class, 'customer'])->name('customepage');
-Route::get('/test', [ComplainRequestController::class, 'test'])->name('test');
-Route::post('/', [ComplainRequestController::class, 'customerStore'])->name('customerStore');
-
-
-Route::prefix('ecare')->name('ecare.')->group(function () {
-    Route::prefix('trace')->name('trace.')->group(function () {
-        Route::get('/', [TraceCnoteController::class, 'index'])->name('index');
-    });
-    Route::get('/', [ComplainController::class, 'index'])->name('index');
-    Route::get('/request-complain', [ComplainRequestController::class, 'requestComplain'])->name('requestComplain');
-    Route::get('/generate', [ComplainController::class, 'generate'])->name('generate');
-    Route::get('/create', [ComplainController::class, 'create'])->name('create');
-    Route::post('/', [ComplainController::class, 'store'])->name('store');
-    Route::post('/comment', [ComplainController::class, 'commentstore'])->name('commentstore');
-});
 
 
 Route::get('/jsons', function () {

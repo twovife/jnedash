@@ -2,21 +2,20 @@ import ContentWrap from "@/Components/ContentWrap";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 
-export default function Dashboard(props) {
+export default function Dashboard({ auth, ...props }) {
     return (
         <Authenticated
-            auth={props.auth}
-            errors={props.errors}
+            auth={auth}
             header={
-                <h2 className="font-semibold text-xl text-gray-800 dark:text-white leading-tight">
-                    Dashboard
-                </h2>
+                <>
+                    <h2 className="font-semibold text-xl text-gray-800 dark:text-white leading-tight">
+                        Dashboard
+                    </h2>
+                </>
             }
         >
-            <Head title="Dashboard" />
-
-            {/* <div className="bg-white p-4 rounded">a</div> */}
-            <ContentWrap>Selamat Datang di E-care Jne Kediri</ContentWrap>
+            <Head title="Claim" />
+            <ContentWrap>Welcome to Customer Care Application</ContentWrap>
         </Authenticated>
     );
 }

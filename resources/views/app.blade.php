@@ -9,7 +9,6 @@
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
-
     <!-- Scripts -->
     @routes
     @viteReactRefresh
@@ -17,7 +16,7 @@
     @inertiaHead
 </head>
 
-<body class="font-sans antialiased relative">
+<body class="font-sans antialiased relative bg-blue-100">
     @inertia
     <div id="modal-root"></div>
     <div id="toast-root"></div>

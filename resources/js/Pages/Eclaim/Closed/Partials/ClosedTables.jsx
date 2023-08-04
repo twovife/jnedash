@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsFillCloudDownloadFill } from "react-icons/bs";
 import { NumericFormat } from "react-number-format";
-import Detail from "../../Detail/Detail";
+import Detail from "../../../Csoffice/Eclaim/Detail";
 
 export default function ClosedTables({ datas, onFilterChange, filterValue }) {
     const { total, from, to, next_page_url, prev_page_url } = datas;
