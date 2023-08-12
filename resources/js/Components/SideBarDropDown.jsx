@@ -1,6 +1,6 @@
 import { Link } from "@inertiajs/react";
 import React, { useState } from "react";
-import { BiGridSmall, BiCaretRight } from "react-icons/bi";
+import { BiCaretRight } from "react-icons/bi";
 import { AiFillAppstore } from "react-icons/ai";
 
 export default function SideBarDropDown({

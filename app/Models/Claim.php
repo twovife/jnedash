@@ -62,4 +62,9 @@ class Claim extends Model
     {
         return $this->belongsTo(User::class, 'processed_by', 'id');
     }
+
+    public function scopeWithFilters($query)
+    {
+        //
+    }
 }

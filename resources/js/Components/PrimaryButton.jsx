@@ -8,6 +8,7 @@ export default function PrimaryButton({
     children,
     disabled,
     icon,
+    padding = "px-4 py-3",
     theme = "primary",
     ...props
 }) {
@@ -48,7 +49,7 @@ export default function PrimaryButton({
             {...props}
             type={type}
             className={
-                `disabled:cursor-not-allowed flex gap-2 items-center px-4 py-3 border border-transparent rounded-md font-semibold text-xs text-white tracking-widest focus:outline-none focus:ring-2 ${
+                `disabled:cursor-not-allowed flex gap-2 items-center border border-transparent rounded-md font-semibold text-xs text-white tracking-widest focus:outline-none focus:ring-2 ${padding} ${
                     processing && "opacity-25"
                 } transition ease-in-out duration-150 ` + themeclass
             }

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -31,7 +32,49 @@ class ClaimController extends Controller
      */
     public function index()
     {
-        //
+
+        Session::put('last_claim_request', request()->all());
+
+        $queries = Claim::with('cnote', 'processedby', 'closedby')
+            ->withFilters()
+            ->paginate(20)
+            ->withQueryString();
+
+        $data['data'] = collect($queries->items())->map(fn ($que) => [
+            'id' => $que->id ?? null,
+            'ticket_id' => $que->ticket_id ?? null,
+            'created_at' => $que->created_at->format('Y-m-d') ?? null,
+            'processed_at' => $que->processed_at ? $que->processed_at : null,
+            'processed_by' => $que->processedby ? $que->processedby->name : null,
+            'closed_at' => $que->closed_at ? $que->closed_at : null,
+            'closed_by' => $que->closedby ? $que->closedby->name : null,
+            'connote' => $que->cnote ? $que->cnote->connote : null,
+            'origin' => $que->cnote ? $que->cnote->origin : null,
+            'destination' => $que->cnote ? $que->cnote->destination : null,
+            'status_sla' => $que->status_sla ?? null,
+            'sla' =>  $que->sla ?? null,
+            'claim_propose' => $que->claim_propose ?? null,
+            'claim_approved' => $que->claim_approved ?? null,
+            'case' => $que->case ?? null,
+            'complainant_idcard' => $que->complainant_idcard ?? null,
+            'complainant_bank' => $que->complainant_bank ?? null,
+            'complainant_nota' => $que->complainant_nota ?? null,
+            'transfer_nota' => $que->transfer_nota ?? null,
+            'status' => $que->status ?? "open",
+        ]);
+
+        $data['link'] = [
+            'first_page' => $queries->url(1),
+            'last' => $queries->url($queries->lastPage()),
+            'previous_page' => $queries->previousPageUrl(),
+            'next_page' => $queries->nextPageUrl(),
+            'total_data' => $queries->total()
+        ];
+
+        return Inertia::render('Csoffice/Eclaim/Index', [
+            'claims' => $data,
+            'filters' => request()->all()
+        ]);
     }
 
     /**
@@ -53,23 +96,8 @@ class ClaimController extends Controller
     public function store(StoreClaimRequest $request)
     {
 
-        $cnote_no = preg_replace('/\s+/', '', $request->cnote);
-        $data = Connote::where('connote', $cnote_no)->first();
-
-        $shipper_xml = file_get_contents('http://hybrid.jne.co.id:9763/services/displayconnote.SOAP12Endpoint/displayshipper?pcnote=' . $cnote_no);
-        $shipper_array = json_decode(json_encode((array)simplexml_load_string($shipper_xml)), 1);
-        $shipper =  $shipper_array['Entry'] ?? null;
-
-        $receiver_xml = file_get_contents('http://hybrid.jne.co.id:9763/services/displayconnote.SOAP12Endpoint/displayreceiver?pcnote=' . $cnote_no);
-        $receiver_array = json_decode(json_encode((array)simplexml_load_string($receiver_xml)), 1);
-        $receiver =  $receiver_array['Entry'] ?? null;
-
-        $detail_xml = file_get_contents('http://hybrid.jne.co.id:9763/services/displayconnote.SOAP12Endpoint/displayconnote1?pcnote=' . $cnote_no);
-        $detail_array = json_decode(json_encode((array)simplexml_load_string($detail_xml)), 1);
-        $detail =  $detail_array['Entry'] ?? null;
-        $detail['connote_date'] = Carbon::createFromFormat('d-M-Y H:i:s', $detail['connote_date'])->format('Y-m-d\TH:i:s');
-
-
+        $lastRequest = Session::get('last_claim_request', []);
+        Session::forget('last_claim_request');
 
         $ktp_name = Str::random(7) . time() . '.' . $request->file('ktp')->getClientOriginalExtension();
         $uploadktp = Image::make($request->file('ktp'))->save(storage_path('app/public/client_upload/' . $ktp_name), 60);
@@ -80,48 +108,101 @@ class ClaimController extends Controller
         $rekening_name = Str::random(7) . time() . '.' . $request->file('ktp')->getClientOriginalExtension();
         $uploadrekening = Image::make($request->file('rekening'))->save(storage_path('app/public/client_upload/' . $rekening_name), 60);
 
-        $request['asuransi'] = $detail['insurance_value'] > 0 ? 'yes' : 'no';
-        $request['status'] =  'open';
-        $request['ticket_id'] =  'CLM' . date('d') . strtoupper(Str::random(4)) . date('ym');
+        $data = [
+            // "connote_id" => $request->connote_id,
+            "source" => $request->source,
+            "ticket_id" =>  'CLM' . date('d') . strtoupper(Str::random(4)) . date('ym'),
+            "case" => $request->case,
+            "complainant" => $request->complainant,
+            "complainant_addr" => $request->complainant_addr,
+            "complainant_email" => $request->complainant_email,
+            "complainant_number" => $request->complainant_number,
+            "complainant_idcard" => 'client_upload/' . $ktp_name,
+            "complainant_idcard_number" => $request->complainant_idcard_number,
+            "complainant_bank" => 'client_upload/' . $rekening_name,
+            "complainant_bank_number" => $request->complainant_bank_number,
+            "complainant_bank_name" => $request->complainant_bank_name,
+            "complainant_bank_branch" => $request->complainant_bank_branch,
+            "complainant_bank_username" => $request->complainant_bank_username,
+            "complainant_nota" => 'client_upload/' . $nota_name,
+            "complainant_resi" => $request->complainant_resi,
+            "packing" => $request->packing,
+            "packer" => $request->packer,
+            "penawaran_packing" => $request->packing == 'yes' ? 'yes' : $request->penawaran_packing ?? 'yes',
+            "penawaran_asuransi" =>  $request->penawaran_asuransi ?? 'yes',
+            "claim_propose" => $request->claim_propose,
+            "status" =>  'open',
+            "sla" => Carbon::now()->addDay(7),
+            "signature" => time() . Str::random(7),
+        ];
 
-        $request['complainant_idcard'] = 'client_upload/' . $ktp_name;
-        $request['complainant_nota'] = 'client_upload/' . $nota_name;
-        $request['complainant_bank'] = 'client_upload/' . $rekening_name;
-        $request['penawaran_asuransi'] = $request->penawaran_asuransi ?? 'yes';
-        $request['penawaran_packing'] = $request->packing == 'yes' ? 'yes' : $request->penawaran_packing ?? 'yes';
-        $request['signature'] = time() . Str::random(7);
-        $request['sla'] = Carbon::now()->addDay(7);
-
-        if (!$shipper || !str_contains($shipper['origin'], 'KDR')) {
-            return redirect()->route('eclaim.create')->with('_error', 'Terjadi Kesalahan saat input data, mohon refresh browser anda terlebih dahulu 1');
-        }
 
         try {
             DB::beginTransaction();
-            if (!$data) {
-                $generateAwb = Connote::create($detail);
-                $generateAwb->receiver()->create($receiver);
-                $generateAwb->shipper()->create($shipper);
-                $generateAwb->claim()->create($request->all());
-            } else {
-                $data->claim()->create($request->all());
-            }
-            DB::commit();
-        } catch (Exception  $e) {
-            DB::rollBack();
-            return redirect()->route('eclaim.create')->with('_error', 'Terjadi Kesalahan saat input data, mohon refresh browser anda terlebih dahulu 2');
-        }
+            $cnote_no = preg_replace('/\s+/', '', $request->cnote);
 
-        $claim = $request->all();
-        $send_to =  $request['complainant_email'];
-        Mail::to($send_to)->send(new CreateClaimMail($claim));
+
+            $shipper_xml = file_get_contents('http://hybrid.jne.co.id:9763/services/displayconnote.SOAP12Endpoint/displayshipper?pcnote=' . $cnote_no);
+            $shipper_array = json_decode(json_encode((array)simplexml_load_string($shipper_xml)), 1);
+            $shippers =  $shipper_array['Entry'] ?? null;
+
+            $receiver_xml = file_get_contents('http://hybrid.jne.co.id:9763/services/displayconnote.SOAP12Endpoint/displayreceiver?pcnote=' . $cnote_no);
+            $receiver_array = json_decode(json_encode((array)simplexml_load_string($receiver_xml)), 1);
+            $receivers =  $receiver_array['Entry'] ?? null;
+
+            $detail_xml = file_get_contents('http://hybrid.jne.co.id:9763/services/displayconnote.SOAP12Endpoint/displayconnote1?pcnote=' . $cnote_no);
+            $detail_array = json_decode(json_encode((array)simplexml_load_string($detail_xml)), 1);
+            $details =  $detail_array['Entry'] ?? null;
+            $detail = [
+                'receiving_no' => $details['receiving_no'],
+                'connote' => $details['connote'],
+                'connote_date' =>  Carbon::createFromFormat('d-M-Y H:i:s', $details['connote_date'])->format('Y-m-d\TH:i:s'),
+                'customer' => $details['customer'],
+                'customer_name' => $details['customer_name'],
+                'goods_type' => $details['goods_type'],
+                'goods_description' => is_array($details['goods_description']) ? $details['goods_type'] : $details['goods_description'],
+                'services_code' => $details['services_code'],
+                'payment_type' => $details['payment_type'],
+                'qty' => is_array($details['qty']) ? 0 : $details['qty'],
+                'weight' => is_array($details['weight']) ? 0 : $details['weight'],
+                'amount' => is_array($details['amount']) ? 0 : $details['amount'],
+                'insurance_value' => is_array($details['insurance_value']) ? 0 : $details['insurance_value'],
+
+                'origin' => $shippers['origin'],
+                'shipper_name' => $shippers['shipper_name'],
+                'shipper_city' => $shippers['origin'],
+                'shipper_phone' => is_array($shippers['phone']) ? 0 : $shippers['phone'],
+
+                'destination' => $receivers['destination'],
+                'receiver_name' => $receivers['receiver_name'],
+                'receiver_address' => is_array($receivers['address']) ? $receivers['destination'] : $receivers['address'],
+                'receiver_city' =>  is_array($receivers['city']) ? $receivers['destination'] : $receivers['city'],
+                'receiver_phone' => is_array($receivers['phone']) ? 0 : $receivers['phone'],
+            ];
+            $fetchConnote = Connote::firstOrCreate(['connote' => $cnote_no], $detail);
+
+
+            $data['connote_id'] = $fetchConnote->id;
+            $data['asuransi'] = $detail['insurance_value'] > 0 ? 'yes' : 'no';
+            $storeClaim = Claim::create($data);
+
+            $claim = $data;
+            $send_to =  $data['complainant_email'];
+            Mail::to($send_to)->send(new CreateClaimMail($claim));
+            DB::commit();
+        } catch (Exception $e) {
+            dd($e);
+            return redirect()->back()->withErrors('Terjadi Kesalahan saat input data, mohon refresh browser anda terlebih dahulu 1');
+            DB::rollBack();
+        }
 
         if ($request->header('referer') == route('claim.customer')) {
-            return redirect()->route('claim.customerthanks', $request['ticket_id']);
+            return redirect()->route('claim.customerthanks', $data['ticket_id']);
         } else {
-            return redirect()->route('eclaim.open')->with(['_success' => 'Data Berhasil Ditambahkan']);
+            return redirect()->route('csoffice.claim.index', $lastRequest)->with(['_success' => 'Data Berhasil Ditambahkan']);
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -131,7 +212,7 @@ class ClaimController extends Controller
      */
     public function show(Claim $claim)
     {
-        return $claim->load('cnote', 'cnote.shipper', 'cnote.receiver', 'processedby', 'closedby');
+        return $claim->load('cnote', 'processedby', 'closedby');
     }
 
     /**
@@ -156,7 +237,7 @@ class ClaimController extends Controller
      */
     public function update(UpdateClaimRequest $request, Claim $claim)
     {
-        dd($claim);
+        //
     }
 
 
@@ -199,46 +280,30 @@ class ClaimController extends Controller
 
     public function proccessdata(Claim $claim)
     {
+
+        $lastRequest = Session::get('last_claim_request', []);
+        Session::forget('last_claim_request');
+
         try {
             $claim->status = 'processed';
             $claim->processed_at = date('Y-m-d');
             $claim->processed_by = Auth::user()->id;
             $claim->save();
-            return redirect()->route('eclaim.open')->with('_success', 'data berhasil diproccess');
         } catch (\Throwable $th) {
-            return redirect()->route('eclaim.open')->with('_error', 'data gagal di proccess, silahkan refresh browser terlebih dahulu');
+            return redirect()->route('csoffice.claim.index', $lastRequest)->withErrors('data gagal di proccess, silahkan refresh browser terlebih dahulu');
         }
+        return redirect()->route('csoffice.claim.index', $lastRequest)->with('message', 'data berhasil diproccess');
     }
 
-    public function processed()
-    {
-        return Inertia::render('Eclaim/Processed/Processed', [
-            'claim' =>  Claim::query()->with('cnote:id,connote', 'cnote.shipper:connote_id,origin', 'cnote.receiver:connote_id,destination', 'processedby:id,username')
-                ->when(request('search'), function ($query, $search) {
-                    $query->where(strtolower('ticket_id'), 'like', strtolower('%' . $search . '%'))
-                        ->orWhereHas('cnote', function ($query) use ($search) {
-                            $query->where(strtolower('connote'), 'like', strtolower('%' . $search . '%'));
-                        })->orWhereHas('cnote.shipper', function ($query) use ($search) {
-                            $query->where(strtolower('origin'), 'like', strtolower('%' . $search . '%'));
-                        })->orWhereHas('cnote.receiver', function ($query) use ($search) {
-                            $query->where(strtolower('destination'), 'like', strtolower('%' . $search . '%'));
-                        })->orWhereHas('processedby', function ($query) use ($search) {
-                            $query->where(strtolower('username'), 'like', strtolower('%' . $search . '%'));
-                        });
-                })
-                ->where('status', 'processed')
-                ->select('id', 'connote_id', 'ticket_id', 'complainant_idcard', 'complainant_bank', 'complainant_nota', 'transfer_nota', 'created_at', 'processed_at', 'processed_by', 'claim_propose', 'sla')
-                ->latest()
-                ->paginate(5)
-                ->withQueryString(),
-            'filterval' => request('search') ?? null
-        ]);
-    }
+
 
 
     public function approved(Request $request, Claim $claim)
     {
-        // dd($claim->complainant_addr);
+
+        $lastRequest = Session::get('last_claim_request', []);
+        Session::forget('last_claim_request');
+
         $request->validate([
             "claim_approved" => ['integer', 'required'],
             "reason" => ['required', 'string', 'max:225'],
@@ -253,27 +318,31 @@ class ClaimController extends Controller
             "*.image" => 'file harus berupa gambar (jpg, jpeg, png, bmp, gif, svg, or webp)',
         ]);
 
-        $bukti_transfer = Str::random(7) . time() . '.' . $request->file('transfer')->getClientOriginalExtension();
-        $upload_transfer = Image::make($request->file('transfer'))->save(storage_path('app/public/client_upload/' . $bukti_transfer), 60);
 
-        $request['status'] = 'approved';
-        $request['closed_by'] = Auth::user()->id;
-        $request['closed_at'] = date('Y-m-d');
-        $request['transfer_nota'] = 'client_upload/' . $bukti_transfer;
-        $request['status_sla'] = date('Y-m-d') > $claim->sla ? 'over sla' : 'sla';
 
         try {
+            DB::beginTransaction();
+            $bukti_transfer = Str::random(7) . time() . '.' . $request->file('transfer')->getClientOriginalExtension();
+            $upload_transfer = Image::make($request->file('transfer'))->save(storage_path('app/public/client_upload/' . $bukti_transfer), 60);
+
+            $request['status'] = 'approved';
+            $request['closed_by'] = Auth::user()->id;
+            $request['closed_at'] = date('Y-m-d');
+            $request['transfer_nota'] = 'client_upload/' . $bukti_transfer;
+            $request['status_sla'] = date('Y-m-d') > $claim->sla ? 'over sla' : 'sla';
+
             $claim->update($request->all());
             $claim->save();
-        } catch (\Throwable $th) {
+            DB::commit();
+        } catch (Exception $e) {
             throw ValidationException::withMessages([
                 'claim_approved' => 'update error, refresh browser anda terlebih dahulu',
             ]);
+            DB::rollBack();
         }
 
-        // dd($claim);
         Mail::to($claim->complainant_email)->send(new ApprovedClaimMail($claim));
-        return redirect()->route('eclaim.processed')->with('_success', 'Data Berhasil Diubah');
+        return redirect()->route('csoffice.claim.index', $lastRequest)->with('message', 'Data Berhasil Diubah');
     }
 
     public function rejected(Request $request, Claim $claim)
@@ -294,41 +363,16 @@ class ClaimController extends Controller
         try {
             $claim->update($request->all());
             $claim->save();
-        } catch (\Throwable $th) {
+        } catch (Exception $th) {
             throw ValidationException::withMessages([
                 'claim_approved' => 'update error, refresh browser anda terlebih dahulu',
             ]);
         }
 
         Mail::to($claim->complainant_email)->send(new RejectedClaimMail($claim));
-        return redirect()->route('eclaim.processed')->with('_success', 'Data Berhasil Diubah');
+        return redirect()->route('csoffice.claim.index')->with('message', 'Data Berhasil Diubah');
     }
 
-    public function closed()
-    {
-
-        return Inertia::render('Eclaim/Closed/Closed', [
-            'claim' =>  Claim::query()->with('cnote:id,connote', 'cnote.shipper:connote_id,origin', 'cnote.receiver:connote_id,destination', 'processedby:id,username')
-                ->when(request('search'), function ($query, $search) {
-                    $query->where(strtolower('ticket_id'), 'like', strtolower('%' . $search . '%'))
-                        ->orWhere(strtolower('status_sla'), strtolower($search))
-                        ->orWhere(strtolower('status'), 'like', strtolower('%' . $search . '%'))
-                        ->orWhereHas('cnote', function ($query) use ($search) {
-                            $query->where(strtolower('connote'), 'like', strtolower('%' . $search . '%'));
-                        })->orWhereHas('cnote.shipper', function ($query) use ($search) {
-                            $query->where(strtolower('origin'), 'like', strtolower('%' . $search . '%'));
-                        })->orWhereHas('cnote.receiver', function ($query) use ($search) {
-                            $query->where(strtolower('destination'), 'like', strtolower('%' . $search . '%'));
-                        })->orWhereHas('processedby', function ($query) use ($search) {
-                            $query->where(strtolower('username'), 'like', strtolower('%' . $search . '%'));
-                        });
-                })
-                ->whereNotNull('closed_at')
-                ->paginate(5)
-                ->withQueryString(),
-            'filterval' => request('search') ?? null
-        ]);
-    }
 
     public function monitoring()
     {

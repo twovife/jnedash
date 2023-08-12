@@ -27,26 +27,22 @@ export default function Sidebar() {
                     lists={[
                         {
                             id: 1,
-                            href: route("ecare.create"),
-                            name: "Create Ticket",
-                            active: route().current("eclaim.open"),
+                            href: route("csoffice.complainrequest.index"),
+                            name: "Request CS",
+                            active: route().current(
+                                "csoffice.complainrequest.*"
+                            ),
                         },
                         {
                             id: 2,
-                            href: route("eclaim.processed"),
-                            name: "Processed Ticket",
-                            active: route().current("eclaim.processed"),
-                        },
-                        {
-                            id: 3,
-                            href: route("eclaim.closed"),
-                            name: "Monitoring Ticket",
-                            active: route().current("eclaim.closed"),
+                            href: route("csoffice.complain.index"),
+                            name: "Report Ticketing",
+                            active: route().current("csoffice.complain.*"),
                         },
                     ]}
                 />
             </li>
-            <li onClick={() => setColapse(3)}>
+            {/* <li onClick={() => setColapse(3)}>
                 <SideBarDropDown
                     title={"Claim"}
                     active={route().current("eclaim.*")}
@@ -79,7 +75,7 @@ export default function Sidebar() {
                         },
                     ]}
                 />
-            </li>
+            </li> */}
         </ul>
     );
 }

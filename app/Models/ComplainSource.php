@@ -12,4 +12,9 @@ class ComplainSource extends Model
         'source',
         'sub_source'
     ];
+
+    public function scopeWithFilters($query)
+    {
+        $query->when(request()->input('source', []), fn ($que) => $que->likeLower('source', request()->input('source'))->orLikeLower('sub_source', request()->input('source')));
+    }
 }

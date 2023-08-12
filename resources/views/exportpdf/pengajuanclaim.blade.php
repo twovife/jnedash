@@ -68,13 +68,13 @@
                     style="position: absolute;top: 0;left: 20%;text-transform: uppercase;">{{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $claim->cnote->connote_date)->format('d-m-Y') }}</span>
             </p>
             <p style="position: relative">Penerima <span style="position: absolute;top: 0;left: 15%;">:</span><span
-                    style="position: absolute;top: 0;left: 20%;text-transform: uppercase;">{{ $claim->cnote->receiver->receiver_name }}</span>
+                    style="position: absolute;top: 0;left: 20%;text-transform: uppercase;">{{ $claim->cnote->receiver_name }}</span>
             </p>
             <p style="position: relative">Alamat Tujuan<span style="position: absolute;top: 0;left: 15%;">:</span><span
-                    style="position: absolute;top: 0;left: 20%;">{{ $claim->cnote->receiver->city }}</span>
+                    style="position: absolute;top: 0;left: 20%;">{{ $claim->cnote->receiver_city }}</span>
             </p>
             <p style="position: relative">Telp <span style="position: absolute;top: 0;left: 15%;">:</span><span
-                    style="position: absolute;top: 0;left: 20%;text-transform: uppercase;">{{ $claim->cnote->receiver->phone }}</span>
+                    style="position: absolute;top: 0;left: 20%;text-transform: uppercase;">{{ $claim->cnote->receiver_phone }}</span>
             </p>
             <p style="position: relative">Service <span style="position: absolute;top: 0;left: 15%;">:</span><span
                     style="position: absolute;top: 0;left: 20%;text-transform: uppercase;">{{ $claim->cnote->services_code }}</span>

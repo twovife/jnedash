@@ -45,4 +45,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function scopeWithFilters($query)
+    {
+        $query
+            ->when(request()->input('user_create', []), fn ($que) => $que->whereLower('username', request()->input('user_create')))
+            ->when(request()->input('user_closed', []), fn ($que) => $que->whereLower('username', request()->input('user_closed')));
+    }
 }

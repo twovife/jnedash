@@ -51,7 +51,7 @@ export default function LinkButton({
             as={type}
             {...props}
             className={
-                `disabled:cursor-not-allowed flex gap-2 items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white tracking-widest focus:outline-none focus:ring-2 ${
+                `disabled:cursor-not-allowed flex gap-2 items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white tracking-widest focus:outline-none focus:ring-2 hover:cursor-pointer ${
                     processing && "opacity-25"
                 } transition ease-in-out duration-150 ` + themeclass
             }

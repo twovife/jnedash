@@ -13,14 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('connote_shippers', function (Blueprint $table) {
+        Schema::create('complain_follow_ups', function (Blueprint $table) {
             $table->id();
-            $table->integer('connote_id');
-            $table->string('origin')->nullable();
-            $table->string('shipper_name')->nullable();
-            $table->string('address')->nullable();
-            $table->string('city')->nullable();
-            $table->string('phone')->nullable();
+            $table->string('name')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('connote_shippers');
+        Schema::dropIfExists('complain_follow_ups');
     }
 };

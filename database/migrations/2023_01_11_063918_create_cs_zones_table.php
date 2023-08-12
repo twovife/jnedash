@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('city_code')->nullable();
             $table->string('city_zone')->nullable();
+            $table->string('city_zones')->nullable();
             $table->timestamps();
         });
     }

@@ -6,7 +6,8 @@ import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
 import React from "react";
 
-export default function RejectedModal({ id, showReject, closeModal }) {
+export default function RejectedModal({ params, closeModal }) {
+    const { show, id } = params;
     const { data, setData, put, processing, errors, clearErrors, reset } =
         useForm({
             reason: "",
@@ -23,7 +24,7 @@ export default function RejectedModal({ id, showReject, closeModal }) {
 
     const submit = (e) => {
         e.preventDefault();
-        put(route("eclaim.rejected", id), {
+        put(route("csoffice.claim.rejected", id), {
             preserveScroll: true,
             onFinish: (visit) => {
                 closedModal();
@@ -37,7 +38,7 @@ export default function RejectedModal({ id, showReject, closeModal }) {
     };
 
     return (
-        <Modal show={showReject} maxWidth={"md"} onClose={closedModal}>
+        <Modal show={show} maxWidth={"md"} onClose={closedModal}>
             <form onSubmit={submit} className="p-6">
                 <h2 className="text-lg font-medium text-gray-900 dark:text-white text-center">
                     Form Penolakan Claim
@@ -58,6 +59,7 @@ export default function RejectedModal({ id, showReject, closeModal }) {
                     <PrimaryButton
                         type="submit"
                         theme="warning"
+                        disabled={processing}
                         // processing={processing}
                     >
                         Ya, Tolak claim ini

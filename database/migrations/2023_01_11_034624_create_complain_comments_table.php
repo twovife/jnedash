@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('complain_comments', function (Blueprint $table) {
             $table->id();
+            $table->integer('complain_id')->nullable();
             $table->string('comment', 1000)->nullable();
             $table->integer('user_comment')->nullable();
             $table->timestamps();
