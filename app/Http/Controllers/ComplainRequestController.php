@@ -37,34 +37,26 @@ class ComplainRequestController extends Controller
 
         $complainrequest = ComplainRequest::with('callers')
             ->withFilters()
-            ->when(request()->input('sort', []), function ($que) {
-                $que->orderBy(request()->sort[0], request()->sort[1]);
-            })
-            ->paginate(20)->withQueryString();
+            ->limit(5000)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
 
-        $data['data'] = collect($complainrequest->items())->map(fn ($que) => [
+        $data = collect($complainrequest)->map(fn ($que) => [
             'id' => $que->id,
             'created_at' => $que->created_at->format('d-m-Y'),
             'no_request' => $que->no_request,
+            'awb' => $que->cnote->connote,
             'caller_category' => $que->callers->caller,
             'caller_contact_name' => $que->caller_contact_name,
             'caller_contact_person' => $que->caller_contact_person,
             'request_status' => $que->request_status,
         ]);
 
-        $data['link'] = [
-            'first_page' => $complainrequest->url(1),
-            'last' => $complainrequest->url($complainrequest->lastPage()),
-            'previous_page' => $complainrequest->previousPageUrl(),
-            'next_page' => $complainrequest->nextPageUrl(),
-            'total_data' => $complainrequest->total()
-        ];
-
 
         return Inertia::render('Csoffice/RequestComplain/Index', [
-            'requests' => $data,
-            'filters' => request()->all()
+            'responses' => $data,
+            'serverFilters' => request()->all()
         ]);
     }
 

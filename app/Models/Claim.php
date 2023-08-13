@@ -65,6 +65,7 @@ class Claim extends Model
 
     public function scopeWithFilters($query)
     {
-        //
+        $query->when(request()->input('created_at', []), fn ($que) => $que->whereDateBetween('created_at', request()->input('created_at')))
+            ->when(request()->input('connote', []), fn ($que) => $que->whereHas('cnote', fn ($que) => $que->withFilters()));
     }
 }

@@ -87,29 +87,8 @@ class Complain extends Model
 
     public function scopeWithFilters($query)
     {
-
-        // $query->with(['cnote' => function ($que) {
-        //     return $que->where('connote', 'kediri');
-        // }])
-        // return $this->with(['cnote'=>function($que)use($query)]);
-        // $query
-        //     ->whereHas('cnote', fn ($que) => $que->withFilters())
-        //     ->whereHas('creator', fn ($que) => $que->withFilters())
-        //     ->whereHas('callers', fn ($que) => $que->withFilters())
-        $query->when(request()->input('id', []), fn ($que) => $que->where('id', request()->input('id')))
-            ->when(request()->input('no_ticket', []), fn ($que) => $que->where('no_ticket', request()->input('no_ticket')))
-            ->when(request()->input('branch', []), fn ($que) => $que->whereLower('branch', request()->input('branch')))
-            ->when(request()->input('source', []), fn ($que) => $que->whereHas('source', fn ($que) => $que->withFilters()))
-            ->when(request()->input('user_create', []), fn ($que) => $que->whereHas('creator', fn ($que) => $que->withFilters()))
-            ->when(request()->input('created_at', []), fn ($que) => $que->whereDateBetween('created_at', request()->input('created_at')))
-            ->when(request()->input('caller_category', []), fn ($que) => $que->whereHas('callers', fn ($que) => $que->withFilters()))
-            ->when(request()->input('caller_sub_category', []), fn ($que) => $que->likeLower('caller_sub_category', request()->input('caller_sub_category')))
-            ->when(request()->input('caller_contact_name', []), fn ($que) => $que->likeLower('caller_contact_name', request()->input('caller_contact_name')))
-            ->when(request()->input('caller_contact_person', []), fn ($que) => $que->likeLower('caller_contact_person', request()->input('caller_contact_person')))
-            ->when(request()->input('connote', []), fn ($que) => $que->whereHas('cnote', fn ($que) => $que->withFilters()))
-            ->when(request()->input('status', []), fn ($que) => $que->likeLower('status', request()->input('status')))
-            ->when(request()->input('note', []), fn ($que) => $que->likeLower('note', request()->input('note')))
-            ->when(request()->input('followup_by', []), fn ($que) => $que->whereLower('followup_by', request()->input('followup_by')));
+        $query->when(request()->input('created_at', []), fn ($que) => $que->whereDateBetween('created_at', request()->input('created_at')))
+            ->when(request()->input('connote', []), fn ($que) => $que->whereHas('cnote', fn ($que) => $que->withFilters()));
     }
 }
 

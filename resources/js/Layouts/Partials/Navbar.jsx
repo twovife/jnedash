@@ -36,7 +36,7 @@ export default function Navbar({ auth, hideSidebar }) {
         setTheme(theme === "dark" ? "light" : "dark");
     };
     return (
-        <nav className="flex p-4 items-center  bg-white dark:bg-gray-800 shadow sticky top-0 w-full">
+        <nav className="flex p-2 px-4 items-center  bg-white dark:bg-gray-800 shadow sticky top-0 w-full z-[100]">
             <h1 className="mr-3 font-semibold text-xl text-black dark:text-white">
                 E - Care
             </h1>

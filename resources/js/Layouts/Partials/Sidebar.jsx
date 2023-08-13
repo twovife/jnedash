@@ -42,7 +42,7 @@ export default function Sidebar() {
                     ]}
                 />
             </li>
-            {/* <li onClick={() => setColapse(3)}>
+            <li onClick={() => setColapse(3)}>
                 <SideBarDropDown
                     title={"Claim"}
                     active={route().current("eclaim.*")}
@@ -51,31 +51,29 @@ export default function Sidebar() {
                     lists={[
                         {
                             id: 1,
-                            href: route("eclaim.open"),
-                            name: "Open Claim",
-                            active: route().current("eclaim.open"),
+                            href: route("csoffice.complainrequest.index"),
+                            name: "Pengajuan Claim",
+                            active: route().current(
+                                "csoffice.complainrequest.*"
+                            ),
                         },
                         {
                             id: 2,
-                            href: route("eclaim.processed"),
-                            name: "On Process Claim",
-                            active: route().current("eclaim.processed"),
+                            href: route("csoffice.claim.index"),
+                            name: "Report Claim",
+                            active: route().current("csoffice.claim.index"),
                         },
                         {
                             id: 3,
-                            href: route("eclaim.closed"),
-                            name: "Closed Claim",
-                            active: route().current("eclaim.closed"),
-                        },
-                        {
-                            id: 4,
-                            href: route("eclaim.monitoring"),
-                            name: "Monitoring Claim",
-                            active: route().current("eclaim.monitoring"),
+                            href: route("csoffice.claim.monitoring"),
+                            name: "Report Monitoring Claim",
+                            active: route().current(
+                                "csoffice.claim.monitoring"
+                            ),
                         },
                     ]}
                 />
-            </li> */}
+            </li>
         </ul>
     );
 }

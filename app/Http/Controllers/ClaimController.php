@@ -25,22 +25,19 @@ use Intervention\Image\Facades\Image;
 
 class ClaimController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // used
     public function index()
     {
 
-        Session::put('last_claim_request', request()->all());
+        Session::put('last_claim', request()->all());
 
         $queries = Claim::with('cnote', 'processedby', 'closedby')
             ->withFilters()
-            ->paginate(20)
-            ->withQueryString();
+            ->limit(5000)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        $data['data'] = collect($queries->items())->map(fn ($que) => [
+        $data = collect($queries)->map(fn ($que) => [
             'id' => $que->id ?? null,
             'ticket_id' => $que->ticket_id ?? null,
             'created_at' => $que->created_at->format('Y-m-d') ?? null,
@@ -63,41 +60,26 @@ class ClaimController extends Controller
             'status' => $que->status ?? "open",
         ]);
 
-        $data['link'] = [
-            'first_page' => $queries->url(1),
-            'last' => $queries->url($queries->lastPage()),
-            'previous_page' => $queries->previousPageUrl(),
-            'next_page' => $queries->nextPageUrl(),
-            'total_data' => $queries->total()
-        ];
+
 
         return Inertia::render('Csoffice/Eclaim/Index', [
-            'claims' => $data,
-            'filters' => request()->all()
+            'responses' => $data,
+            'serverFilters' => request()->all()
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
-        return Inertia::render('Eclaim/Create/Create');
+        //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreClaimRequest  $request
-     * @return \Illuminate\Http\Response
-     */
+    //used
     public function store(StoreClaimRequest $request)
     {
 
-        $lastRequest = Session::get('last_claim_request', []);
-        Session::forget('last_claim_request');
+        $lastRequest = Session::get('last_claim', []);
+        Session::forget('last_claim');
 
         $ktp_name = Str::random(7) . time() . '.' . $request->file('ktp')->getClientOriginalExtension();
         $uploadktp = Image::make($request->file('ktp'))->save(storage_path('app/public/client_upload/' . $ktp_name), 60);
@@ -196,20 +178,11 @@ class ClaimController extends Controller
             DB::rollBack();
         }
 
-        if ($request->header('referer') == route('claim.customer')) {
-            return redirect()->route('claim.customerthanks', $data['ticket_id']);
-        } else {
-            return redirect()->route('csoffice.claim.index', $lastRequest)->with(['_success' => 'Data Berhasil Ditambahkan']);
-        }
+        return redirect()->route('claim.customerthanks', $data['ticket_id']);
     }
 
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Claim  $claim
-     * @return \Illuminate\Http\Response
-     */
+    //   used
     public function show(Claim $claim)
     {
         return $claim->load('cnote', 'processedby', 'closedby');
@@ -254,35 +227,12 @@ class ClaimController extends Controller
     }
 
 
-
-    public function open()
-    {
-        return Inertia::render('Eclaim/Open/Open', [
-            'claim' =>  Claim::query()->with('cnote:id,connote', 'cnote.shipper:connote_id,origin', 'cnote.receiver:connote_id,destination')
-                ->when(request('search'), function ($query, $search) {
-                    $query->where(strtolower('ticket_id'), 'like', strtolower('%' . $search . '%'))
-                        ->orWhereHas('cnote', function ($query) use ($search) {
-                            $query->where(strtolower('connote'), 'like', strtolower('%' . $search . '%'));
-                        })->orWhereHas('cnote.shipper', function ($query) use ($search) {
-                            $query->where(strtolower('origin'), 'like', strtolower('%' . $search . '%'));
-                        })->orWhereHas('cnote.receiver', function ($query) use ($search) {
-                            $query->where(strtolower('destination'), 'like', strtolower('%' . $search . '%'));
-                        });
-                })
-                ->where('status', 'open')
-                ->select('id', 'connote_id', 'ticket_id', 'complainant_idcard', 'complainant_bank', 'complainant_nota', 'transfer_nota', 'created_at', 'sla')
-                ->latest()
-                ->paginate(5)
-                ->withQueryString(),
-            'filterval' => request('search') ?? null
-        ]);
-    }
-
+    // used
     public function proccessdata(Claim $claim)
     {
 
-        $lastRequest = Session::get('last_claim_request', []);
-        Session::forget('last_claim_request');
+        $lastRequest = Session::get('last_claim', []);
+        Session::forget('last_claim');
 
         try {
             $claim->status = 'processed';
@@ -295,14 +245,12 @@ class ClaimController extends Controller
         return redirect()->route('csoffice.claim.index', $lastRequest)->with('message', 'data berhasil diproccess');
     }
 
-
-
-
+    // used
     public function approved(Request $request, Claim $claim)
     {
 
-        $lastRequest = Session::get('last_claim_request', []);
-        Session::forget('last_claim_request');
+        $lastRequest = Session::get('last_claim', []);
+        Session::forget('last_claim');
 
         $request->validate([
             "claim_approved" => ['integer', 'required'],
@@ -345,6 +293,7 @@ class ClaimController extends Controller
         return redirect()->route('csoffice.claim.index', $lastRequest)->with('message', 'Data Berhasil Diubah');
     }
 
+    // used
     public function rejected(Request $request, Claim $claim)
     {
         $request->validate([
@@ -374,6 +323,7 @@ class ClaimController extends Controller
     }
 
 
+    // used
     public function monitoring()
     {
         return Inertia::render('Eclaim/Monitoring/Monitoring', [
@@ -411,6 +361,7 @@ class ClaimController extends Controller
         ]);
     }
 
+    //used
     public function exportpdf($ticket_id)
     {
         $claim = Claim::where('ticket_id', $ticket_id)->first();
@@ -420,6 +371,7 @@ class ClaimController extends Controller
         return $pdf->stream();
     }
 
+    // used
     public function clientpdf($ticket_id)
     {
         $claim = Claim::where('ticket_id', $ticket_id)->first();
@@ -429,6 +381,8 @@ class ClaimController extends Controller
         return $pdf->stream();
     }
 
+
+    // used
     public function signature($ticket_id)
     {
         $data = Claim::query()->where('ticket_id', $ticket_id)->first();
@@ -437,11 +391,14 @@ class ClaimController extends Controller
         ]);
     }
 
+    // used
     public function customer()
     {
         return Inertia::render('Eclaim/Customer/Claim');
     }
 
+
+    // used
     public function customerthanks($ticket_id)
     {
         $claim = Claim::query()->select('ticket_id', 'complainant_email')->where('ticket_id', $ticket_id)->first();

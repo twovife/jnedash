@@ -16,7 +16,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import useFilteredComplains from "@/Hooks/useFilteredComplains";
 import Pagination from "@/Components/Pagination";
 
-const Index = ({ auth, ...props }) => {
+const Monitoring = ({ auth, ...props }) => {
     const itemsPerPage = 20;
     const {
         filters,
@@ -444,4 +444,4 @@ const Index = ({ auth, ...props }) => {
     );
 };
 
-export default Index;
+export default Monitoring;

@@ -31,16 +31,16 @@ class ComplainController extends Controller
     public function index()
     {
 
-        Session::put('last_request', request()->all());
+        Session::put('last_complain', request()->all());
 
         $queries = Complain::with('cnote', 'source', 'callers', 'ticketcase')
             ->withFilters()
-            ->when(request()->input('sort', []), function ($que) {
-                $que->orderBy(request()->sort[0], request()->sort[1]);
-            })
-            ->paginate(20)->withQueryString();
+            ->limit(5000)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        $data['data'] = collect($queries->items())->map(fn ($que) => [
+
+        $data = collect($queries)->map(fn ($que) => [
             'id' => $que->id ?? null,
             'no_ticket' => $que->no_ticket ?? null,
             'branch' => $que->branch ?? null,
@@ -72,18 +72,9 @@ class ComplainController extends Controller
             'due_date' => $que->due_date ?? null,
         ]);
 
-        $data['link'] = [
-            'first_page' => $queries->url(1),
-            'last' => $queries->url($queries->lastPage()),
-            'previous_page' => $queries->previousPageUrl(),
-            'next_page' => $queries->nextPageUrl(),
-            'total_data' => $queries->total()
-        ];
-
-
         return Inertia::render('Csoffice/Ecare/Index', [
-            'complains' => $data,
-            'filters' => request()->all()
+            'responses' => $data,
+            'serverFilters' => request()->all()
         ]);
     }
 
@@ -106,8 +97,8 @@ class ComplainController extends Controller
     {
 
 
-        $lastRequest = Session::get('last_request', []);
-        Session::forget('last_request');
+        $lastRequest = Session::get('last_complain', []);
+        Session::forget('last_complain');
 
         $duedate = Carbon::createFromFormat('d/m/Y', $request->due_date)->format('Y-m-d');
         $data = [
@@ -237,8 +228,8 @@ class ComplainController extends Controller
 
 
 
-        $lastRequest = Session::get('last_request', []);
-        Session::forget('last_request');
+        $lastRequest = Session::get('last_complain', []);
+        Session::forget('last_complain');
 
         try {
             DB::beginTransaction();
@@ -275,8 +266,8 @@ class ComplainController extends Controller
     public function destroy(Complain $complain)
     {
 
-        $lastRequest = Session::get('last_request', []);
-        Session::forget('last_request');
+        $lastRequest = Session::get('last_complain', []);
+        Session::forget('last_complain');
 
         try {
             ComplainComment::where('complain_id', $complain->id)->delete();

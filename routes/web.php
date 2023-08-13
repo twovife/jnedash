@@ -66,31 +66,10 @@ Route::prefix('csoffice')->name('csoffice.')->group(function () {
         Route::put('/{claim}/proccess', 'proccessdata')->name('proccessdata');
         Route::post('/{claim}/approved',  'approved')->name('approved');
         Route::put('/{claim}/rejected',  'rejected')->name('rejected');
-        Route::get('/{claim}',  'show')->name('show');
+        Route::get('/show/{claim}',  'show')->name('show');
+        Route::get('/monitoring', 'monitoring')->name('monitoring');
+        // Route::get('/exportExcell',  'exportExcell')->name('exportExcell');
     });
-});
-
-
-Route::middleware(['auth'])->group(function () {
-    Route::prefix('eclaim')->name('eclaim.')->middleware('permission:cs')->group(function () {
-
-
-
-        Route::get('/monitoring', [ClaimController::class, 'monitoring'])->name('monitoring');
-        Route::get('/exportExcell', [ClaimController::class, 'exportExcell'])->name('exportExcell');
-    });
-
-
-    Route::prefix('profile')->name('profile.')->group(function () {
-        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
-        Route::patch('/', [ProfileController::class, 'update'])->name('update');
-        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
-    });
-});
-
-
-Route::prefix('email')->name('email.')->group(function () {
-    Route::get('/createclaim/{ticket_id}', [EmailController::class, 'createclaim'])->name('createclaim');
 });
 
 Route::prefix('eclaim')->name('eclaim.')->group(function () { //done
@@ -107,12 +86,20 @@ Route::prefix('claim')->name('claim.')->group(function () { //done
 
 
 
-Route::get('/jsons', function () {
-    $content = json_decode(file_get_contents(storage_path('app\public\zoning.json')), true);
-    collect($content)->each(function ($contentt) {
-        dd($contentt);
-    });
-    dd($content);
+Route::prefix('email')->name('email.')->group(function () {
+    Route::get('/createclaim/{ticket_id}', [EmailController::class, 'createclaim'])->name('createclaim');
 });
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+    });
+});
+
+
+
 
 require __DIR__ . '/auth.php';
