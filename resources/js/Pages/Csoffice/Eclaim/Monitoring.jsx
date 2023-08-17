@@ -4,7 +4,6 @@ import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
-import LinkButton from "@/Components/LinkButton";
 import ImageShow from "@/Components/ImageShow";
 import { BsFillCloudDownloadFill } from "react-icons/bs";
 import dayjs from "dayjs";
@@ -12,11 +11,10 @@ import { NumericFormat } from "react-number-format";
 import ApproveModal from "./ApproveModal";
 import RejectedModal from "./RejectedModal";
 import Detail from "./Detail";
-import PrimaryButton from "@/Components/PrimaryButton";
 import useFilteredComplains from "@/Hooks/useFilteredComplains";
 import Pagination from "@/Components/Pagination";
 
-const Monitoring = ({ auth, ...props }) => {
+const Index = ({ auth, ...props }) => {
     const itemsPerPage = 20;
     const {
         filters,
@@ -37,14 +35,17 @@ const Monitoring = ({ auth, ...props }) => {
     };
 
     useEffect(() => {
-        const storedFilter = JSON.parse(localStorage.getItem("complainfilter"));
-        if (Object.keys(storedFilter).length !== 0) {
+        const storedFilter = JSON.parse(
+            localStorage.getItem("monitoringFilters")
+        );
+
+        if (storedFilter && Object.keys(storedFilter).length > 0) {
             setFilters(storedFilter);
         }
     }, []);
 
     useEffect(() => {
-        localStorage.setItem("complainfilter", JSON.stringify(filters));
+        localStorage.setItem("monitoringFilters", JSON.stringify(filters));
     }, [filters]);
 
     const onClosed = (e) => {
@@ -54,16 +55,17 @@ const Monitoring = ({ auth, ...props }) => {
 
     const header = [
         {
-            title: "Nomor Tiket",
-            column: "ticket_id",
-            sortable: false,
-        },
-        {
-            title: "Tanggal Claim",
+            title: "Create Ticket",
             formater: "date",
             column: "created_at",
             sortable: false,
         },
+        {
+            title: "Nomor Tiket",
+            column: "ticket_id",
+            sortable: false,
+        },
+
         {
             title: "Nomor Resi",
             column: "connote",
@@ -78,7 +80,87 @@ const Monitoring = ({ auth, ...props }) => {
             title: "Destination",
             column: "destination",
             sortable: false,
-            filterable: false,
+        },
+        {
+            title: "Service",
+            column: "services_code",
+            sortable: false,
+        },
+        {
+            title: "Shipper Name",
+            column: "shipper_name",
+            sortable: false,
+        },
+        {
+            title: "Shipper Telp",
+            column: "shipper_phone",
+            sortable: false,
+        },
+        {
+            title: "Cnee Name",
+            column: "receiver_name",
+            sortable: false,
+        },
+        {
+            title: "Cnee Telp",
+            column: "receiver_phone",
+            sortable: false,
+        },
+        {
+            title: "Pelapor",
+            column: "complainant",
+            sortable: false,
+        },
+        {
+            title: "Pelapor Telp",
+            column: "complainant_number",
+            sortable: false,
+        },
+        {
+            title: "Pelapor Email",
+            column: "complainant_email",
+            sortable: false,
+        },
+        {
+            title: "Case",
+            column: "case",
+            sortable: false,
+        },
+        {
+            title: "Diskripsi Barang",
+            column: "goods_description",
+            sortable: false,
+        },
+        {
+            title: "Nilai Barang",
+            column: "amount",
+            sortable: false,
+        },
+        {
+            title: "Packing Kayu",
+            column: "packing",
+            sortable: false,
+        },
+
+        {
+            title: "Asuransi",
+            column: "asuransi",
+            sortable: false,
+        },
+        {
+            title: "Packer",
+            column: "packer",
+            sortable: false,
+        },
+        {
+            title: "Penawaran Packing Kayu",
+            column: "penawaran_packing",
+            sortable: false,
+        },
+        {
+            title: "Penawaran Asuransi",
+            column: "penawaran_asuransi",
+            sortable: false,
         },
         {
             title: "Claim Propose",
@@ -90,6 +172,18 @@ const Monitoring = ({ auth, ...props }) => {
             title: "Claim Approve",
             column: "claim_approved",
             formater: "currency",
+            sortable: false,
+        },
+
+        {
+            title: "Penyelesaian",
+            column: "penyelesaian",
+            sortable: false,
+        },
+
+        {
+            title: "Pembebanan",
+            column: "pembebanan",
             sortable: false,
         },
         {
@@ -104,8 +198,21 @@ const Monitoring = ({ auth, ...props }) => {
             sortable: false,
         },
         {
+            title: "Status Claim",
+            column: "status",
+            sortable: false,
+        },
+
+        {
             title: "Processed At",
             column: "processed_at",
+            formater: "date",
+            sortable: false,
+        },
+
+        {
+            title: "Closed At",
+            column: "closed_at",
             formater: "date",
             sortable: false,
         },
@@ -115,38 +222,19 @@ const Monitoring = ({ auth, ...props }) => {
             sortable: false,
         },
         {
-            title: "Closed At",
-            column: "closed_at",
-            formater: "date",
-            sortable: false,
-        },
-        {
             title: "Closed by",
             column: "closed_by",
-            sortable: false,
-        },
-        {
-            title: "Status",
-            column: "status",
             sortable: false,
         },
         {
             title: "Lampiran",
             column: "lampiran",
             sortable: false,
-            filterable: false,
         },
         {
             title: "Document",
             column: "document",
             sortable: false,
-            filterable: false,
-        },
-        {
-            title: "Actions",
-            column: "actions",
-            sortable: false,
-            filterable: false,
         },
     ];
 
@@ -400,8 +488,9 @@ const Monitoring = ({ auth, ...props }) => {
                     </h2>
                     <Head title="Claim" />
                     <div className="ml-auto">
-                        <LinkButton
-                            as="a"
+                        <a
+                            className={`transition ease-in-out duration-150 bg-blue-500 disabled:hover:bg-blue-800 hover:bg-blue-700 focus:bg-blue-600 active:bg-blue-900 focus:ring-blue-500 disabled:cursor-not-allowed flex gap-2 items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white tracking-widest focus:outline-none focus:ring-2 hover:cursor-pointer`}
+                            as="button"
                             title={"Create"}
                             href={route("claim.customer")}
                         />
@@ -444,4 +533,4 @@ const Monitoring = ({ auth, ...props }) => {
     );
 };
 
-export default Monitoring;
+export default Index;

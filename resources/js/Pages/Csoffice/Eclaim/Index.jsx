@@ -37,14 +37,14 @@ const Index = ({ auth, ...props }) => {
     };
 
     useEffect(() => {
-        const storedFilter = JSON.parse(localStorage.getItem("complainfilter"));
-        if (Object.keys(storedFilter).length !== 0) {
+        const storedFilter = JSON.parse(localStorage.getItem("claimFilter"));
+        if (storedFilter && Object.keys(storedFilter).length > 0) {
             setFilters(storedFilter);
         }
     }, []);
 
     useEffect(() => {
-        localStorage.setItem("complainfilter", JSON.stringify(filters));
+        localStorage.setItem("claimFilter", JSON.stringify(filters));
     }, [filters]);
 
     const onClosed = (e) => {
@@ -78,7 +78,6 @@ const Index = ({ auth, ...props }) => {
             title: "Destination",
             column: "destination",
             sortable: false,
-            filterable: false,
         },
         {
             title: "Claim Propose",
@@ -134,19 +133,16 @@ const Index = ({ auth, ...props }) => {
             title: "Lampiran",
             column: "lampiran",
             sortable: false,
-            filterable: false,
         },
         {
             title: "Document",
             column: "document",
             sortable: false,
-            filterable: false,
         },
         {
             title: "Actions",
             column: "actions",
             sortable: false,
-            filterable: false,
         },
     ];
 
@@ -400,8 +396,9 @@ const Index = ({ auth, ...props }) => {
                     </h2>
                     <Head title="Claim" />
                     <div className="ml-auto">
-                        <LinkButton
-                            as="a"
+                        <a
+                            className={`transition ease-in-out duration-150 bg-blue-500 disabled:hover:bg-blue-800 hover:bg-blue-700 focus:bg-blue-600 active:bg-blue-900 focus:ring-blue-500 disabled:cursor-not-allowed flex gap-2 items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white tracking-widest focus:outline-none focus:ring-2 hover:cursor-pointer`}
+                            as="button"
                             title={"Create"}
                             href={route("claim.customer")}
                         />

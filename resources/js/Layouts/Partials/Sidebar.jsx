@@ -51,20 +51,12 @@ export default function Sidebar() {
                     lists={[
                         {
                             id: 1,
-                            href: route("csoffice.complainrequest.index"),
-                            name: "Pengajuan Claim",
-                            active: route().current(
-                                "csoffice.complainrequest.*"
-                            ),
-                        },
-                        {
-                            id: 2,
                             href: route("csoffice.claim.index"),
                             name: "Report Claim",
                             active: route().current("csoffice.claim.index"),
                         },
                         {
-                            id: 3,
+                            id: 2,
                             href: route("csoffice.claim.monitoring"),
                             name: "Report Monitoring Claim",
                             active: route().current(

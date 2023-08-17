@@ -20,7 +20,7 @@ const Index = ({ auth, ...props }) => {
 
     useEffect(() => {
         const storedFilter = JSON.parse(localStorage.getItem("reqcomplain"));
-        if (Object.keys(storedFilter).length !== 0) {
+        if (storedFilter && Object.keys(storedFilter).length > 0) {
             setFilters(storedFilter);
         }
     }, []);

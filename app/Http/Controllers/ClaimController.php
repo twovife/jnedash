@@ -326,38 +326,56 @@ class ClaimController extends Controller
     // used
     public function monitoring()
     {
-        return Inertia::render('Eclaim/Monitoring/Monitoring', [
-            'claim' =>  Claim::query()->with('cnote', 'cnote.shipper', 'cnote.receiver', 'processedby', 'closedby')
-                ->when(request('search'), function ($query, $search) {
-                    $query->where(strtolower('ticket_id'), 'like', strtolower('%' . $search . '%'))
-                        ->orWhere(strtolower('status_sla'), strtolower($search))
-                        ->orWhere(strtolower('status'), 'like', strtolower('%' . $search . '%'))
-                        ->orWhereHas('cnote', function ($query) use ($search) {
-                            $query->where(strtolower('connote'), 'like', strtolower('%' . $search . '%'));
-                        })->orWhereHas('cnote.shipper', function ($query) use ($search) {
-                            $query->where(strtolower('origin'), 'like', strtolower('%' . $search . '%'));
-                        })->orWhereHas('cnote.receiver', function ($query) use ($search) {
-                            $query->where(strtolower('destination'), 'like', strtolower('%' . $search . '%'));
-                        })->orWhereHas('processedby', function ($query) use ($search) {
-                            $query->where(strtolower('username'), 'like', strtolower('%' . $search . '%'));
-                        });
-                })
-                ->when(request('datefrom'), function ($query, $search) {
-                    $query->whereDate('created_at', '>=', $search);
-                }, function ($query) {
-                    $query->whereDate('created_at', '>=', Carbon::today()->subDays(30)->format('Y-m-d'));
-                })
-                ->when(request('datethru'), function ($query, $search) {
-                    $query->whereDate('created_at', '<=', $search);
-                }, function ($query) {
-                    $query->whereDate('created_at', '<=', Carbon::today()->format('Y-m-d'));
-                })
-                ->whereNotNull('id')
-                ->paginate(5)
-                ->withQueryString(),
-            'filterval' => request('search') ?? null,
-            'filterfrom' => request('datefrom') ?? Carbon::today()->subDays(30)->format('Y-m-d'),
-            'filterthru' => request('datethru') ?? Carbon::today()->format('Y-m-d')
+
+        $queries = Claim::with('cnote', 'processedby', 'closedby')
+            ->withFilters()
+            ->limit(5000)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $data = collect($queries)->map(fn ($que) => [
+            'id' => $que->id ?? null,
+            'created_at' => $que->created_at->format('Y-m-d') ?? null,
+            'ticket_id' => $que->ticket_id ?? null,
+            'connote' => $que->cnote ? $que->cnote->connote : null,
+            'origin' => $que->cnote ? $que->cnote->origin : null,
+            'destination' => $que->cnote ? $que->cnote->destination : null,
+            'services_code' => $que->cnote ? $que->cnote->services_code : null,
+            'shipper_name' => $que->cnote ? $que->cnote->shipper_name : null,
+            'shipper_phone' => $que->cnote ? $que->cnote->shipper_phone : null,
+            'receiver_name' => $que->cnote ? $que->cnote->receiver_name : null,
+            'receiver_phone' => $que->cnote ? $que->cnote->receiver_phone : null,
+            'complainant' => $que->cnote ? $que->complainant : null,
+            'complainant_number' => $que->cnote ? $que->complainant_number : null,
+            'complainant_email' => $que->cnote ? $que->complainant_email : null,
+            'case' => $que->case ?? null,
+            'goods_description' => $que->cnote ? $que->cnote->goods_description : null,
+            'amount' => $que->cnote ? $que->cnote->amount : null,
+            'packing' => $que->packing ?? null,
+            'packer' => $que->packer ?? null,
+            'penawaran_packing' => $que->penawaran_packing ?? null,
+            'asuransi' => $que->asuransi ?? null,
+            'penawaran_asuransi' => $que->penawaran_asuransi ?? null,
+            'claim_propose' => $que->claim_propose ?? null,
+            'claim_approved' => $que->claim_approved ?? null,
+            'penyelesaian' => $que->penyelesaian ?? null,
+            'pembebanan' => $que->pembebanan ?? null,
+            'sla' =>  $que->sla ?? null,
+            'status_sla' => $que->status_sla ?? null,
+            'status' => $que->status ?? "open",
+            'processed_at' => $que->processed_at ? $que->processed_at : null,
+            'processed_by' => $que->processedby ? $que->processedby->name : null,
+            'closed_at' => $que->closed_at ? $que->closed_at : null,
+            'closed_by' => $que->closedby ? $que->closedby->name : null,
+            'complainant_idcard' => $que->complainant_idcard ?? null,
+            'complainant_bank' => $que->complainant_bank ?? null,
+            'complainant_nota' => $que->complainant_nota ?? null,
+            'transfer_nota' => $que->transfer_nota ?? null,
+        ]);
+
+        return Inertia::render('Csoffice/Eclaim/Monitoring', [
+            'responses' => $data,
+            'serverFilters' => request()->all()
         ]);
     }
 

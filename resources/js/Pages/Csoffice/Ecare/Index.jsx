@@ -44,7 +44,7 @@ const Index = ({ auth, ...props }) => {
 
     useEffect(() => {
         const storedFilter = JSON.parse(localStorage.getItem("complainfilter"));
-        if (Object.keys(storedFilter).length !== 0) {
+        if (storedFilter && Object.keys(storedFilter).length > 0) {
             setFilters(storedFilter);
         }
     }, []);

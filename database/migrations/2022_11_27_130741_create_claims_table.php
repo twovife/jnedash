@@ -11,6 +11,8 @@ return new class extends Migration
      *
      * @return void
      */
+
+    //  calibrated
     public function up()
     {
         Schema::create('claims', function (Blueprint $table) {
