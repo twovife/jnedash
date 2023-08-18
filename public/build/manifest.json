@@ -45,7 +45,7 @@
       "resources/js/Pages/Welcome.jsx"
     ],
     "css": [
-      "assets/app.20bd9b3b.css"
+      "assets/app.a88d0628.css"
     ]
   },
   "resources/js/Pages/Auth/ConfirmPassword.jsx": {
@@ -911,7 +911,7 @@
     "src": "coffe.css"
   },
   "resources/js/app.css": {
-    "file": "assets/app.20bd9b3b.css",
+    "file": "assets/app.a88d0628.css",
     "src": "resources/js/app.css"
   }
 }
