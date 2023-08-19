@@ -206,7 +206,7 @@ const InternalService = (props) => {
                         className="relative"
                     >
                         <ReCAPTCHA
-                            sitekey="6LfmCPgmAAAAAG3YsqNTEikM22Kam2WvtAYce1oO"
+                            sitekey={props.reCapta}
                             onChange={onChange}
                         />
                     </Transition>

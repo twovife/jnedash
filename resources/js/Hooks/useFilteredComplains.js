@@ -8,14 +8,21 @@ function useFilteredComplains(initialFilters, itemsPerPage) {
 
     const filteredComplains = props.responses.filter((item) => {
         for (const key in filters) {
-            const paramValue = filters[key]?.toLowerCase(); // Mengubah nilai parameter menjadi huruf kecil
-            const itemValue = item[key]?.toLowerCase(); // Mengubah nilai properti dalam item menjadi huruf kecil
+            if (typeof item[key] === "string") {
+                const paramValue = filters[key]?.toLowerCase(); // Mengubah nilai parameter menjadi huruf kecil
+                const itemValue = item[key]?.toLowerCase(); // Mengubah nilai properti dalam item menjadi huruf kecil
 
-            if (
-                typeof itemValue === "string" &&
-                !itemValue.includes(paramValue)
-            ) {
-                return false;
+                if (!itemValue.includes(paramValue)) {
+                    return false;
+                }
+            }
+            if (typeof item[key] === "number") {
+                const paramValue = filters[key]; // Mengubah nilai parameter menjadi huruf kecil
+                const itemValue = item[key]; // Mengubah nilai properti dalam item menjadi huruf kecil
+
+                if (parseInt(itemValue) !== parseInt(paramValue)) {
+                    return false;
+                }
             }
         }
 

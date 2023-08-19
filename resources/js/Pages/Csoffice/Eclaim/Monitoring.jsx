@@ -490,10 +490,11 @@ const Index = ({ auth, ...props }) => {
                     <div className="ml-auto">
                         <a
                             className={`transition ease-in-out duration-150 bg-blue-500 disabled:hover:bg-blue-800 hover:bg-blue-700 focus:bg-blue-600 active:bg-blue-900 focus:ring-blue-500 disabled:cursor-not-allowed flex gap-2 items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white tracking-widest focus:outline-none focus:ring-2 hover:cursor-pointer`}
-                            as="button"
-                            title={"Create"}
                             href={route("claim.customer")}
-                        />
+                            target="_blank"
+                        >
+                            Download
+                        </a>
                     </div>
                 </>
             }

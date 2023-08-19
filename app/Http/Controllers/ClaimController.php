@@ -277,7 +277,7 @@ class ClaimController extends Controller
             $request['closed_by'] = Auth::user()->id;
             $request['closed_at'] = date('Y-m-d');
             $request['transfer_nota'] = 'client_upload/' . $bukti_transfer;
-            $request['status_sla'] = date('Y-m-d') > $claim->sla ? 'over sla' : 'sla';
+            $request['status_sla'] = date('Y-m-d') > $claim->sla ? 'over' : 'sla';
 
             $claim->update($request->all());
             $claim->save();
@@ -307,7 +307,7 @@ class ClaimController extends Controller
         $request['status'] = 'rejected';
         $request['closed_by'] = Auth::user()->id;
         $request['closed_at'] = date('Y-m-d');
-        $request['status_sla'] = date('Y-m-d') > $claim->sla ? 'over sla' : 'sla';
+        $request['status_sla'] = date('Y-m-d') > $claim->sla ? 'over' : 'sla';
 
         try {
             $claim->update($request->all());
