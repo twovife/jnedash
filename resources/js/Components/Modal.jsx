@@ -48,7 +48,7 @@ export default function Modal({
 
     return ReactDOM.createPortal(
         <Transition show={show} leave="duration-200">
-            <div className="fixed flex items-center justify-center inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-40">
+            <div className="fixed flex items-center justify-center inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-[100]">
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"

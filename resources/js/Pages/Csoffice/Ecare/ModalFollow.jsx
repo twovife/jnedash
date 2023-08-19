@@ -52,13 +52,8 @@ const ModalFollow = ({ show, onModalClosed, userLogin }) => {
     ];
 
     return (
-        <Modal
-            show={isShow}
-            maxWidth={"2xl"}
-            onClose={modalClosed}
-            className={`bg-transparent h-full`}
-        >
-            <div className="p-7 bg-white dark:bg-gray-800 h-full rounded-lg overflow-y-auto">
+        <Modal show={isShow} maxWidth={"2xl"} onClose={modalClosed}>
+            <div className="p-7 bg-white dark:bg-gray-800 h-[90vh] rounded-lg overflow-y-auto">
                 <h1 className="text-xl mb-3">Follow Up Ticketing CS</h1>
                 <form onSubmit={onSubmitForm}>
                     <div className="grid grid-cols-4 mt-2 gap-2">
