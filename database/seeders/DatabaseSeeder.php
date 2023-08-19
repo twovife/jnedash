@@ -40,5 +40,3 @@ class DatabaseSeeder extends Seeder
         }
     }
 }
-
-// id, receiving_no, connote, connote_date, customer, customer_name, goods_type, goods_description, services_code, payment_type, qty, weight, amount, insurance_value, zona, origin, destination, shipper_name, shipper_address, shipper_city, shipper_phone, receiver_name, receiver_address, receiver_city, receiver_phone, created_at, updated_at
