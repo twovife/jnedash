@@ -35,8 +35,10 @@ const ModalFollow = ({ show, onModalClosed, userLogin }) => {
 
     const onSubmitForm = (e) => {
         e.preventDefault();
-        post(route("csoffice.complain.storecomment", id));
-        fetchMyApi();
+        post(route("csoffice.complain.storecomment", id), {
+            onFinish: () => fetchMyApi(),
+        });
+        // fetchMyApi();
     };
 
     const modalClosed = (e) => {
