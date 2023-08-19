@@ -430,7 +430,9 @@ const EditComplain = ({ auth, complain, ...props }) => {
                                 "csoffice.complain.destroy",
                                 complain.id
                             )}
-                            title={"Delete"}
+                            as="button"
+                            title={"Hapus"}
+                            method="DELETE"
                             theme="danger"
                             icon={<AiFillDelete />}
                         />

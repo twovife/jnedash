@@ -594,6 +594,7 @@ const Create = ({ auth, ...props }) => {
                             </div>
                             <div className="w-full text-right flex gap-3">
                                 <PrimaryButton
+                                    disabled={processing}
                                     className="ml-auto"
                                     type={"submit"}
                                     title={"submit"}

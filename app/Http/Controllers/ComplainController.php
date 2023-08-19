@@ -193,10 +193,11 @@ class ComplainController extends Controller
         try {
             DB::beginTransaction();
             $complain->status = $request->status ?? 'process';
+            $complain->comments()->create($validate);
             $complain->save();
-            $complain->comments->create($validate);
             DB::commit();
-        } catch (Exception $th) {
+        } catch (Exception $e) {
+            dd($e);
             return redirect()->back()->with('message', 'Terjadi Kesalahan saat input data, mohon refresh browser anda terlebih dahulu 2');
         }
 
