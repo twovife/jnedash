@@ -133,7 +133,8 @@ class ComplainRequestController extends Controller
             ]);
             DB::commit();
         } catch (Exception $e) {
-            return redirect()->route('customepage')->withErrors('Maaf terjadi kesalahan saat pemprosesan, mohon refresh halaman dan masukkan kembali data anda');
+            dd($e);
+            return redirect()->back()->withErrors('Maaf terjadi kesalahan saat pemprosesan, mohon refresh halaman dan masukkan kembali data anda');
         }
 
 
