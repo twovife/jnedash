@@ -18,7 +18,7 @@ class FollowupSeeder extends Seeder
     {
         try {
             DB::beginTransaction();
-            $picis = json_decode(file_get_contents(storage_path('agen.json')), true);
+            $picis = json_decode(file_get_contents(storage_path('fuby.json')), true);
 
             $complain_agen = collect($picis)->each(function ($pic) {
                 ComplainFollowUp::create([
