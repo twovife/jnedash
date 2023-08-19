@@ -70,7 +70,7 @@ Route::prefix('csoffice')->name('csoffice.')->group(function () {
         Route::get('/monitoring', 'monitoring')->name('monitoring');
         // Route::get('/exportExcell',  'exportExcell')->name('exportExcell');
     });
-});
+})->middleware(['auth']);
 
 Route::prefix('eclaim')->name('eclaim.')->group(function () { //done
     Route::get('/{ticket_id}/signature', [ClaimController::class, 'signature'])->name('signature');
