@@ -25,7 +25,6 @@ class StoreClaimRequest extends FormRequest
     {
         return [
             'case' => ['required', 'string', 'max:225'],
-            'cnote' => ['required', 'string', 'max:225', 'unique:connotes,connote'],
             'complainant' => ['required', 'string', 'max:255'],
             'complainant_addr' => ['required', 'string', 'max:225'],
             'complainant_number' => ['required', 'string', 'max:225'],
