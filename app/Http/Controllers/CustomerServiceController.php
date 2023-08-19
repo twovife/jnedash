@@ -26,6 +26,7 @@ class CustomerServiceController extends Controller
         return Inertia::render('CustomerService/InternalService', [
             'complain_callers' => ComplainCaller::whereIn('id', [4, 5])->get(),
             'sales_offices' => SalesOffice::all(),
+            'reCapta' => env('RECAPTA_GOOGLE')
         ]);
     }
 
