@@ -1,0 +1,1 @@
+import{j as r,a as o}from"./app.08f049fb.js";function x({forInput:a,value:t,className:e,children:s,optional:l}){return r("label",{htmlFor:a,className:"block font-medium text-sm text-gray-700 dark:text-gray-200 "+e,children:[t||s,l?o("i",{className:"text-xs opacity-70",children:"\xA0(optional)"}):null]})}export{x as I};

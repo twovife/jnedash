@@ -2,6 +2,7 @@ import ContentWrap from "@/Components/ContentWrap";
 import InputArea from "@/Components/InputArea";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
+import Loading from "@/Components/Loading";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SelectList from "@/Components/SelectList";
 import TextInput from "@/Components/TextInput";
@@ -13,7 +14,6 @@ import CurrencyInput from "react-currency-input-field";
 
 const RequestAction = ({ auth, ...props }) => {
     const { request, followups, complaincase } = props;
-    // console.log(request);
     const { data, setData, post, processing, errors } = useForm({
         branch: "Kediri",
         complainsource_id: 9,
@@ -36,6 +36,7 @@ const RequestAction = ({ auth, ...props }) => {
         values: "",
     });
 
+    const [loading, setLoading] = useState(false);
     const [subCase, setSubCase] = useState({
         nullvalue: true,
         values: "",
@@ -143,6 +144,7 @@ const RequestAction = ({ auth, ...props }) => {
     ];
     const submitForm = (e) => {
         e.preventDefault();
+        setLoading(true);
         post(route("csoffice.complainrequest.generatestore", request.id));
     };
 
@@ -159,6 +161,7 @@ const RequestAction = ({ auth, ...props }) => {
             }
         >
             <ContentWrap>
+                <Loading show={loading} />
                 <form onSubmit={submitForm}>
                     <div className="max-w-7xl mx-auto lg:grid lg:grid-cols-8 lg:space-y-12 gap-3 py-4 px-4 lg:px-0">
                         <div className="col-span-6">
@@ -333,26 +336,28 @@ const RequestAction = ({ auth, ...props }) => {
                                     />
                                 </div>
                             </div>
-                            <div className="w-full text-right flex gap-3">
-                                <PrimaryButton
-                                    disabled={processing}
-                                    className="ml-auto"
-                                    type={"submit"}
-                                    title={"submit"}
-                                />
-                                <Link
-                                    className="bg-red-500 disabled:hover:bg-red-800 hover:bg-red-700 focus:bg-red-600 active:bg-red-900 focus:ring-red-500 disabled:cursor-not-allowed flex gap-2 items-center px-4 py-3 border border-transparent rounded-md font-semibold text-xs text-white tracking-widest focus:outline-none focus:ring-2 transition ease-in-out duration-150"
-                                    as="button"
-                                    method="post"
-                                    href={route(
-                                        "csoffice.complainrequest.generatestore",
-                                        request.id
-                                    )}
-                                    data={{ action: "rejected" }}
-                                >
-                                    Reject
-                                </Link>
-                            </div>
+                            {request.request_status == "open" && (
+                                <div className="w-full text-right flex gap-3">
+                                    <PrimaryButton
+                                        disabled={processing}
+                                        className="ml-auto"
+                                        type={"submit"}
+                                        title={"submit"}
+                                    />
+                                    <Link
+                                        className="bg-red-500 disabled:hover:bg-red-800 hover:bg-red-700 focus:bg-red-600 active:bg-red-900 focus:ring-red-500 disabled:cursor-not-allowed flex gap-2 items-center px-4 py-3 border border-transparent rounded-md font-semibold text-xs text-white tracking-widest focus:outline-none focus:ring-2 transition ease-in-out duration-150"
+                                        as="button"
+                                        method="post"
+                                        href={route(
+                                            "csoffice.complainrequest.generatestore",
+                                            request.id
+                                        )}
+                                        data={{ action: "rejected" }}
+                                    >
+                                        Reject
+                                    </Link>
+                                </div>
+                            )}
                         </div>
                         <div className="col-span-2">
                             <div className="grid grid-cols-2 border-b">

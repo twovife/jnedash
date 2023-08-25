@@ -28,7 +28,7 @@ const EditComplain = ({ auth, complain, ...props }) => {
         caller_sub_category: complain.caller_sub_category ?? "",
         caller_contact_name: complain.caller_contact_name ?? "",
         caller_contact_person: complain.caller_contact_person ?? "",
-        resi: complain.cnote.connote,
+        resi: complain.cnote?.connote,
         complain_case_id: complain.complain_case_id ?? "",
         zona: complain.zona,
         sla: complain.sla,

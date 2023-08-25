@@ -46,7 +46,7 @@ class ComplainRequestController extends Controller
             'id' => $que->id,
             'created_at' => $que->created_at->format('d-m-Y'),
             'no_request' => $que->no_request,
-            'awb' => $que->cnote->connote,
+            'awb' => $que->cnote?->connote,
             'caller_category' => $que->callers->caller,
             'caller_contact_name' => $que->caller_contact_name,
             'caller_contact_person' => $que->caller_contact_person,
@@ -63,7 +63,7 @@ class ComplainRequestController extends Controller
     public function generate(ComplainRequest $complainRequest)
     {
         $complainReq = $complainRequest->load('callers', 'cnote');
-        $destination_zona =  CsZone::query()->where('city_code', $complainReq->cnote->destination)->first();
+        $destination_zona =  CsZone::query()->where('city_code', $complainReq->cnote?->destination)->first();
 
         $zona = $destination_zona->city_zone ?? "A";
         return Inertia::render('Csoffice/RequestComplain/RequestAction', [

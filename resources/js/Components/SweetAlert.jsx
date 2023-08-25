@@ -1,11 +1,29 @@
-import React from "react";
+import { useEffect } from "react";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
-export default function SweetAlert() {
-    return Swal.fire({
-        title: "Error!",
-        text: "Do you want to continue",
-        icon: "error",
-        confirmButtonText: "Cool",
-    });
-}
+const SweetAlert = ({ type, message }) => {
+    const MySwal = withReactContent(Swal);
+    useEffect(() => {
+        if (type === "error") {
+            MySwal.fire({
+                position: "top-end",
+                icon: "error",
+                title: "Terjadi Kesalahan Silahkan hub IT.",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        } else if (type === "success") {
+            MySwal.fire({
+                position: "top-end",
+                icon: "success",
+                title: message || "Anda Telah Melakukan Perubahan",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        }
+    }, [type, message]);
+
+    return null;
+};
+export default SweetAlert;

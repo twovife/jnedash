@@ -6,8 +6,10 @@ import MyTables from "@/Components/Tables/MyTables";
 import { AiFillEdit } from "react-icons/ai";
 import useFilteredComplains from "@/Hooks/useFilteredComplains";
 import Pagination from "@/Components/Pagination";
+import SweetAlert from "@/Components/SweetAlert";
 
 const Index = ({ auth, ...props }) => {
+    console.log(props);
     const {
         filters,
         setFilters,
@@ -16,7 +18,7 @@ const Index = ({ auth, ...props }) => {
         displayData,
         totalPages,
         handlePageChange,
-    } = useFilteredComplains({}, 2);
+    } = useFilteredComplains({}, 20);
 
     useEffect(() => {
         const storedFilter = JSON.parse(localStorage.getItem("reqcomplain"));
