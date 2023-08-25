@@ -63,9 +63,9 @@ Route::prefix('csoffice')->name('csoffice.')->group(function () {
     });
     Route::controller(ClaimController::class)->name('claim.')->prefix('claim')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::put('/{claim}/proccess', 'proccessdata')->name('proccessdata');
-        Route::post('/{claim}/approved',  'approved')->name('approved');
-        Route::put('/{claim}/rejected',  'rejected')->name('rejected');
+        Route::put('/proccess/{claim}', 'proccessdata')->name('proccessdata');
+        Route::post('/approved/{claim}',  'approved')->name('approved');
+        Route::put('/rejected/{claim}',  'rejected')->name('rejected');
         Route::get('/show/{claim}',  'show')->name('show');
         Route::get('/monitoring', 'monitoring')->name('monitoring');
         // Route::get('/exportExcell',  'exportExcell')->name('exportExcell');
@@ -73,7 +73,7 @@ Route::prefix('csoffice')->name('csoffice.')->group(function () {
 })->middleware(['auth']);
 
 Route::prefix('eclaim')->name('eclaim.')->group(function () { //done
-    Route::get('/{ticket_id}/signature', [ClaimController::class, 'signature'])->name('signature');
+    Route::get('/{signature}/signature', [ClaimController::class, 'signature'])->name('signature');
     Route::get('/{ticket_id}/exportpdf', [ClaimController::class, 'exportpdf'])->name('exportpdf');
     Route::get('/{ticket_id}/clientpdf', [ClaimController::class, 'clientpdf'])->name('clientpdf');
     Route::post('/', [ClaimController::class, 'store'])->name('store');

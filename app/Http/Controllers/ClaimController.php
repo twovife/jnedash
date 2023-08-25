@@ -307,6 +307,8 @@ class ClaimController extends Controller
         $request['status'] = 'rejected';
         $request['closed_by'] = Auth::user()->id;
         $request['closed_at'] = date('Y-m-d');
+        $request['processed_by'] = $claim->processed_by ?? Auth::user()->id;
+        $request['processed_at'] = $claim->processed_at ?? date('Y-m-d');
         $request['status_sla'] = date('Y-m-d') > $claim->sla ? 'over sla' : 'sla';
 
         try {
@@ -401,9 +403,10 @@ class ClaimController extends Controller
 
 
     // used
-    public function signature($ticket_id)
+    public function signature($signature)
     {
-        $data = Claim::query()->where('ticket_id', $ticket_id)->first();
+        $data = Claim::query()->where('signature', $signature)->first();
+        // dd($data);
         return Inertia::render('Eclaim/Signature/Signature', [
             'data' => $data
         ]);

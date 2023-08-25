@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
 
 export default function Detail({ params, closedModal }) {
+    console.log(params);
     const { id, show } = params;
     const [value, setValue] = useState(1);
     const [detail, setDetail] = useState();
@@ -34,6 +35,7 @@ export default function Detail({ params, closedModal }) {
             onClose={onModalClosed}
             className={`bg-transparent h-full`}
         >
+            {/* <div>haa</div> */}
             <div className="p-7 bg-white dark:bg-gray-800 h-full rounded-lg overflow-y-auto">
                 {detail ? (
                     <>
@@ -241,45 +243,48 @@ export default function Detail({ params, closedModal }) {
                                     <tbody className="text-center">
                                         <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.connote}
+                                                {detail.cnote?.connote}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
                                                 {dayjs(
-                                                    detail.cnote.connote_date
+                                                    detail.cnote?.connote_date
                                                 ).format("DD/MM/YYYY")}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.origin}
+                                                {detail.cnote?.origin}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.destination}
+                                                {detail.cnote?.destination}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.shipper_name}
+                                                {detail.cnote?.shipper_name}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.shipper_city}
+                                                {detail.cnote?.shipper_city}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.shipper_phone}
+                                                {detail.cnote?.shipper_phone}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.receiver_name}
+                                                {detail.cnote?.receiver_name}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.receiver_city}
+                                                {detail.cnote?.receiver_city}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.receiver_phone}
+                                                {detail.cnote?.receiver_phone}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.customer}
+                                                {detail.cnote?.customer}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.customer_name}
+                                                {detail.cnote?.customer_name}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.goods_description}
+                                                {
+                                                    detail.cnote
+                                                        ?.goods_description
+                                                }
                                             </td>
                                         </tr>
                                     </tbody>
@@ -372,20 +377,20 @@ export default function Detail({ params, closedModal }) {
                                     <tbody className="text-center">
                                         <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.services_code}
+                                                {detail.cnote?.services_code}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.payment_type}
+                                                {detail.cnote?.payment_type}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.qty}
+                                                {detail.cnote?.qty}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.cnote.weight}
+                                                {detail.cnote?.weight}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
                                                 <NumericFormat
-                                                    value={detail.cnote.amount}
+                                                    value={detail.cnote?.amount}
                                                     displayType={"text"}
                                                     thousandSeparator={","}
                                                     prefix={"Rp. "}
@@ -410,7 +415,8 @@ export default function Detail({ params, closedModal }) {
                                                 <NumericFormat
                                                     value={
                                                         detail.cnote
-                                                            .insurance_value
+                                                            ?.insurance_value ??
+                                                        0
                                                     }
                                                     displayType={"text"}
                                                     thousandSeparator={","}
@@ -540,10 +546,10 @@ export default function Detail({ params, closedModal }) {
                                                 {detail.status_sla}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.processedby.username}
+                                                {detail.processedby?.username}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
-                                                {detail.closedby.username}
+                                                {detail.closedby?.username}
                                             </td>
                                             <td className="odd:bg-gray-100 py-4 px-6">
                                                 {detail.reason}

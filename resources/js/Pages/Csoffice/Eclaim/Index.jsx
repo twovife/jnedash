@@ -165,7 +165,8 @@ const Index = ({ auth, ...props }) => {
         try {
             router.visit(
                 route("csoffice.claim.proccessdata", id),
-                { method: put },
+                { method: "put", data: { _method: "put" } },
+
                 {
                     onSuccess: () => {
                         buttons.innerHTML = "Proccess";
@@ -174,6 +175,7 @@ const Index = ({ auth, ...props }) => {
                 }
             );
         } catch (error) {
+            console.log(error);
             buttons.innerHTML = "eror lo";
             setTimeout(() => {
                 buttons.innerHTML = "Proccess";
@@ -208,8 +210,8 @@ const Index = ({ auth, ...props }) => {
                                 {(currentPage - 1) * itemsPerPage + index + 1}
                                 <AiFillEdit
                                     className="text-blue-500 hover:cursor-pointer"
-                                    onClick={showDetailHandler}
-                                    data-id={item.id}
+                                    onClick={() => showDetailHandler(item.id)}
+                                    // data-id={item.id}
                                 />
                             </div>
                         </th>
@@ -375,9 +377,9 @@ const Index = ({ auth, ...props }) => {
         setShowRejectModal(false);
     };
 
-    const showDetailHandler = (e) => {
+    const showDetailHandler = (params) => {
         setShowDetail({
-            id: e.target.getAttribute("data-id"),
+            id: params,
             show: true,
         });
     };
