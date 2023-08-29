@@ -21,7 +21,6 @@ const MyTables = ({
     const [showFilter, setShowFilter] = useState("");
 
     const { serverFilters } = usePage().props;
-    console.log(serverFilters);
     const [filterServer, setFilterServer] = useState({ ...serverFilters });
     const onFilterSaverChangeHandler = (e) => {
         const { name, value } = e.target;
