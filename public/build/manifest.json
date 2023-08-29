@@ -906,12 +906,12 @@
       "resources/js/app.jsx"
     ]
   },
-  "resources/js/app.css": {
-    "file": "assets/app.0225e7a7.css",
-    "src": "resources/js/app.css"
-  },
   "coffe.css": {
     "file": "assets/coffe.ba5d3c69.css",
     "src": "coffe.css"
+  },
+  "resources/js/app.css": {
+    "file": "assets/app.0225e7a7.css",
+    "src": "resources/js/app.css"
   }
 }
