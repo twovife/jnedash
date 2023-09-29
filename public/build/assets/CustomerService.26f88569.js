@@ -1,0 +1,1 @@
+import{I as t}from"./InputArea.e5fdf466.js";import{a as r}from"./app.d74aa348.js";import"./Toast.45942e85.js";import"./index.esm.75506972.js";import"./iconBase.2a6c8b87.js";const a=()=>r("div",{children:r(t,{})});export{a as default};
