@@ -41,7 +41,7 @@ const MyTables = ({
         }
     };
 
-    console.log(filterServer);
+    // console.log(filterServer);
     const thisonclick = (params) => {
         setShowFilter(params);
     };
