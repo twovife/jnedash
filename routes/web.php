@@ -28,9 +28,9 @@ use Inertia\Inertia;
 |
 */
 
-// Route::get('/', function () {
-//     return redirect()->to('https://www.jne.co.id/id/beranda');
-// });
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
 // Route::get('/', [DashboardController::class, 'index']);
 
