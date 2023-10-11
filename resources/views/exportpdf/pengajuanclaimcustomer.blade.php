@@ -26,7 +26,7 @@
 
 <body>
     <div style="text-align: center;margin-bottom: 3rem;">
-        <img src="https://www.jne.co.id/frontend/images/material/logo.jpg" width="200px">
+        <img src="https://www.jne.co.id/cfind/source/images/logo.svg" width="200px">
         <div
             style="margin-top: 1rem;font-size: 1.2rem;font-weight: bold;text-decoration: underline;text-transform: uppercase;">
             Form Pengajuan Claim
