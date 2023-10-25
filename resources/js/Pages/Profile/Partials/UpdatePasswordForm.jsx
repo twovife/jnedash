@@ -24,6 +24,11 @@ export default function UpdatePasswordForm({ className }) {
         password_confirmation: "",
     });
 
+    const handleInput = (e) => {
+        const { name, value } = e.target;
+        setData(name, value);
+    };
+
     const updatePassword = (e) => {
         e.preventDefault();
 
@@ -43,6 +48,8 @@ export default function UpdatePasswordForm({ className }) {
             },
         });
     };
+
+    console.log(data);
 
     return (
         <section className={className}>
@@ -66,14 +73,13 @@ export default function UpdatePasswordForm({ className }) {
 
                     <TextInput
                         id="current_password"
+                        name="current_password"
                         ref={currentPasswordInput}
                         value={data.current_password}
-                        handleChange={(e) =>
-                            setData("current_password", e.target.value)
-                        }
+                        onChange={handleInput}
                         type="password"
                         className="mt-1 block w-full"
-                        autocomplete="current-password"
+                        autoComplete="current-password"
                     />
 
                     <InputError
@@ -87,14 +93,13 @@ export default function UpdatePasswordForm({ className }) {
 
                     <TextInput
                         id="password"
+                        name="password"
                         ref={passwordInput}
                         value={data.password}
-                        handleChange={(e) =>
-                            setData("password", e.target.value)
-                        }
+                        onChange={handleInput}
                         type="password"
                         className="mt-1 block w-full"
-                        autocomplete="new-password"
+                        autoComplete="new-password"
                     />
 
                     <InputError message={errors.password} className="mt-2" />
@@ -108,13 +113,12 @@ export default function UpdatePasswordForm({ className }) {
 
                     <TextInput
                         id="password_confirmation"
+                        name="password_confirmation"
                         value={data.password_confirmation}
-                        handleChange={(e) =>
-                            setData("password_confirmation", e.target.value)
-                        }
+                        onChange={handleInput}
                         type="password"
                         className="mt-1 block w-full"
-                        autocomplete="new-password"
+                        autoComplete="new-password"
                     />
 
                     <InputError
@@ -124,7 +128,9 @@ export default function UpdatePasswordForm({ className }) {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton processing={processing}>Save</PrimaryButton>
+                    <PrimaryButton type="submit" processing={processing}>
+                        Save
+                    </PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}
