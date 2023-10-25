@@ -81,7 +81,6 @@ class ComplainController extends Controller
 
     public function create(Request $request)
     {
-
         return Inertia::render('Csoffice/Ecare/Create', [
             'sources' => ComplainSource::all(),
             'complaincase' => ComplainCase::all(),
