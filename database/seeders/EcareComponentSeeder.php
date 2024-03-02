@@ -47,6 +47,9 @@ class EcareComponentSeeder extends Seeder
                 ], [
                     'source' => 'WIC',
                     'sub_source' => 'WIC'
+                ], [
+                    'source' => 'Sosmed',
+                    'sub_source' => 'Landing Page'
                 ],
             ];
 

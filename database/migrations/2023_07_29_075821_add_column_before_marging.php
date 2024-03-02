@@ -13,21 +13,21 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('connotes', function (Blueprint $table) {
-            $table->string('zona')->nullable();
-            $table->string('origin')->nullable();
-            $table->string('destination')->nullable();
+        // Schema::table('connotes', function (Blueprint $table) {
+        //     $table->string('zona')->nullable();
+        //     $table->string('origin')->nullable();
+        //     $table->string('destination')->nullable();
 
-            $table->string('shipper_name')->nullable();
-            $table->string('shipper_address')->nullable();
-            $table->string('shipper_city')->nullable();
-            $table->string('shipper_phone')->nullable();
+        //     $table->string('shipper_name')->nullable();
+        //     $table->string('shipper_address')->nullable();
+        //     $table->string('shipper_city')->nullable();
+        //     $table->string('shipper_phone')->nullable();
 
-            $table->string('receiver_name')->nullable();
-            $table->string('receiver_address')->nullable();
-            $table->string('receiver_city')->nullable();
-            $table->string('receiver_phone')->nullable();
-        });
+        //     $table->string('receiver_name')->nullable();
+        //     $table->string('receiver_address')->nullable();
+        //     $table->string('receiver_city')->nullable();
+        //     $table->string('receiver_phone')->nullable();
+        // });
     }
 
     /**
